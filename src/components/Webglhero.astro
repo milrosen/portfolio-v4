@@ -1,5 +1,5 @@
 <script>
-    import { setup } from "./webglhelpers/webgl.js"
+    import { setup } from "./react/webgl.js"
 
     const canvas = document.getElementById("canvas") as HTMLCanvasElement;
     const frame = document.getElementById("frame")!
@@ -29,8 +29,14 @@
 
 	// return () => window.removeEventListener("resize", handleResize);
 </script>
-<div id="frame" class="Frame">
-    <canvas id="canvas">
-        Your browser doesn't support the html canvas element
-    </canvas>
-</div>
+
+<canvas id="canvas">
+    Your browser doesn't support the html canvas element
+</canvas>
+
+<style>
+    canvas {
+        position: fixed;
+        pointer-events: none;
+    }
+</style>

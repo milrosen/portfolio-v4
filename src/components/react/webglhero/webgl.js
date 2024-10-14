@@ -56,8 +56,8 @@ class Vector {
 
 async function setup(gl) {
 
-	const fragmentShaderSource = await (await fetch('fragment.glsl')).text();
-	const vertexShaderSource = await (await fetch('vertex.glsl')).text();
+	const fragmentShaderSource = await (await fetch('/portfolio-v4/fragment.glsl')).text();
+	const vertexShaderSource = await (await fetch('/portfolio-v4/vertex.glsl')).text();
 
 	const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
 	const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);

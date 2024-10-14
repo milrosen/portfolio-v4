@@ -8,10 +8,6 @@ body {
     --pad: max(20px, 4vmin)
 }
 
-.App {
-	--pad: max(20px, 4vmin);
-}
-
 .name {
 	transform: translateY(-.32em);
 	font-size: calc(min(max(9vmin, 25px), 3em));
@@ -20,9 +16,18 @@ body {
 	margin-bottom: 1em;
 }
 
+.Inset {
+    margin: var(--pad);
+}
+
+canvas {
+    position: fixed;
+    pointer-events: none;
+}
+
 .Frame {
 	margin: var(--pad);
-	height: calc(100% - var(--pad) * 2);
+	height: calc(100% - calc(var(--pad) * 2));
 	width: calc(100% - calc(var(--pad) * 2));
 	border: 1px solid black;
 	align-items: center;
@@ -31,7 +36,9 @@ body {
 	image-rendering: -webkit-crisp-edges;
 	image-rendering: pixelated;
 	image-rendering: crisp-edges;
-	pointer-events: none;
+	box-shadow: var(--pad) var(--pad) rgba(255, 255, 255, 0.856),
+                calc(0px - var(--pad)) calc(0px - var(--pad)) rgba(255, 255, 255, 0.856);
+    z-index: 100;
 }
 
 .list {
