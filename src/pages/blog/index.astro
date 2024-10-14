@@ -1,0 +1,45 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "../../layouts/Layout.astro"
+import FormattedDate from '../../components/FormattedDate.astro'
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+---
+
+
+
+<Layout>
+	<div class="naviagtion">
+		<div class="header">
+			<h1>
+				Welcome to my blog!
+			</h1>
+			have a look at some of the very fun, excelent, life affirming and life changing posts I've made:
+			<div>ADD POSTS HERE</div>
+		</div>
+		<ul>
+			{
+				posts.map(post => (
+					<li>
+						<a href={`/portfolio-v4/blog/${post.slug}`}>
+							<h4>{post.data.title}</h4>
+							<p class="date">
+								{/* <FormattedDate date={post.data.pubDate} /> */}
+								{post.data.pubDate}
+							</p>
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</div>
+	
+</Layout>
+
+<style>
+	.header {
+		text-align: center;
+	}
+</style>

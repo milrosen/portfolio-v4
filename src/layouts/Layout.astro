@@ -8,10 +8,8 @@ import BaseHead from "../components/BaseHead.astro"
 	</head>
 	<body>
 		<div class="Frame" id="frame">
-			<Hero client:only transition:persist/>
-			<div class="Inset">
-				<slot />
-			</div>
+			<slot />
+			<Hero client:only="react" transition:persist/>
 		</div>
 	</body>
 </html>
