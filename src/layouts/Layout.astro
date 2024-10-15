@@ -7,9 +7,16 @@ import BaseHead from "../components/BaseHead.astro"
 		<BaseHead/>
 	</head>
 	<body>
-		<div class="Frame" id="frame">
-			<slot />
-			<Hero client:only="react" transition:persist/>
+		<div class="Frame" id="frame"/>
+		<div class ="inset">
+			<slot/>
 		</div>
+		<Hero client:only="react" transition:persist/>
 	</body>
 </html>
+
+<style>
+	.inset {
+		padding: var(--pad)
+	}
+</style>

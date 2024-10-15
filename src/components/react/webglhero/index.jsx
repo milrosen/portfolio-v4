@@ -3,7 +3,7 @@ import { setup } from "./webgl.js"
 
 export default function WebglHero() {
 	const canvasRef = useRef();
-	const frame = document.getElementById("frame")
+	// const frame = document.getElementById("frame")
 
 	useEffect(() => {
 		var gl = canvasRef.current.getContext("webgl2", { antialias: false });
@@ -17,7 +17,7 @@ export default function WebglHero() {
 		const performanceCorrection = 1.6;
 
 		const handleResize = e => {
-			const { width, height } = frame.getBoundingClientRect();
+			const [width, height] = [window.innerWidth, window.innerHeight]
 
 			gl.canvas.height = height * window.devicePixelRatio / performanceCorrection - 1;
 			gl.canvas.width = width * window.devicePixelRatio / performanceCorrection;

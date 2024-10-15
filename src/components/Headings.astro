@@ -1,0 +1,59 @@
+---
+import type { MarkdownHeading } from 'astro';
+
+interface Props {
+  headings: MarkdownHeading[];
+}
+
+const { headings } = Astro.props;
+
+const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
+---
+
+<nav>
+  <h2>On this Page</h2>
+  <ul>
+    {
+      filteredHeadings.map((heading) => (
+        <li>
+          <a class={heading.depth == 1 ? "big" : "small"} href={`#${heading.slug}`}>{heading.text}</a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+    ul {
+        font-size: larger;
+    }
+    nav {
+        padding-left: var(--pad);
+        position: fixed
+    }
+
+    a {
+        display: flex;
+        flex-direction: row;
+        margin-top: 0.5rem;
+    }
+
+    .small {
+        font-size: small;
+        margin-left: 1rem;
+        margin-bottom: -0.5rem;
+    }
+
+    .small::before {
+        content: "";
+        display: block;
+        background-color: gray;
+        width: 1px;
+        height: 1.5rem;
+        top: -0.125rem;
+        left: -9px;
+        position: relative;
+    }
+    
+
+</style>

@@ -1,0 +1,59 @@
+---
+import Headings from "../components/Headings.astro";
+import Layout from "./Layout.astro";
+import type { CollectionEntry } from 'astro:content';
+import type { MarkdownHeading } from "astro";
+
+type Props = CollectionEntry<'blog'>['data'] & { headings: MarkdownHeading[] };
+
+
+const { title, description, pubDate, headings } = Astro.props;
+---
+
+<Layout>
+    <div class="blogview">
+        <div class="nav">
+            <Headings headings={headings}/>
+        </div>
+        <div class="container">
+            <div class="content">
+                <div class="header">
+                    <h1>{title}</h1>
+                    <h2>{description}</h2>
+                    <h4>{pubDate}</h4>
+                </div>
+                <div class="post">
+                    <slot/>
+                </div>
+            </div>
+        </div>
+   </div>
+</Layout>
+
+<style>
+.blogview {
+    display: flex;
+    flex-direction: row;
+}
+.container {
+    flex: 4
+}
+.content {
+    background: white;
+    box-shadow: 0px 100px 0px white,
+                0px -100px 0px white,
+                100px 0px 0px 100px white,
+                99px 0px 0px 100px black;
+
+    padding-left: 15vw; 
+    padding-right: 20vw;
+}
+.nav {
+    flex: 1;
+    min-width: fit-content;
+}
+:global(h1, h2) {
+    scroll-margin: 50px;
+}
+
+</style>
