@@ -14,7 +14,6 @@ body {
 	font-size: calc(min(max(9vmin, 25px), 3em));
 	font-weight: 010;
 	margin: 0px;
-	margin-bottom: 1em;
 }
 
 canvas {
@@ -22,6 +21,15 @@ canvas {
     pointer-events: none;
     top:0;
     z-index: -1;
+}
+
+h1, h2, h3 {
+    font-weight: 010;
+}
+
+.cardGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
 }
 
 .Frame {
@@ -39,6 +47,12 @@ canvas {
     z-index: 100;
     pointer-events: none;
     position: fixed;
+}
+
+@media only screen and (max-width: 600px) {
+    .cardGrid {
+        grid-template-columns: 1fr;
+    }
 }
 
 a {

@@ -11,7 +11,7 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
 ---
 
 <nav>
-  <h2>On this Page</h2>
+  <h2>In this Post</h2>
   <ul>
     {
       filteredHeadings.map((heading) => (
@@ -53,6 +53,14 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
         top: -0.125rem;
         left: -9px;
         position: relative;
+    }
+
+    @media only screen and (max-width: 600px) {
+        nav {
+            position: relative;
+            padding-left: 15vw; 
+            padding-right: 20vw;
+        }
     }
     
 

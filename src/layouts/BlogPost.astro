@@ -12,16 +12,17 @@ const { title, description, pubDate, headings } = Astro.props;
 
 <Layout>
     <div class="blogview">
+        <div class="header">
+            <h1>{title}</h1>
+            <h2>{description}</h2>
+            <h4>{pubDate}</h4>
+        </div>
         <div class="nav">
             <Headings headings={headings}/>
         </div>
         <div class="container">
             <div class="content">
-                <div class="header">
-                    <h1>{title}</h1>
-                    <h2>{description}</h2>
-                    <h4>{pubDate}</h4>
-                </div>
+                
                 <div class="post">
                     <slot/>
                 </div>
@@ -32,28 +33,54 @@ const { title, description, pubDate, headings } = Astro.props;
 
 <style>
 .blogview {
-    display: flex;
-    flex-direction: row;
+    display: grid;
+    grid-template-areas: 
+    "h t"
+    "h p";
+    grid-template-columns: 1fr 3fr;
 }
 .container {
-    flex: 4
+    grid-area: p;
 }
 .content {
     background: white;
     box-shadow: 0px 100px 0px white,
-                0px -100px 0px white,
-                100px 0px 0px 100px white,
-                99px 0px 0px 100px black;
+                0px -300px 0px white,
+                300px 0px 0px 300px white,
+                299px 0px 0px 300px black;
 
     padding-left: 15vw; 
     padding-right: 20vw;
 }
+.header {
+    grid-area: t;
+    z-index: 1;
+    padding-left: 15vw; 
+    padding-right: 20vw;
+}
 .nav {
-    flex: 1;
+    grid-area: h;
     min-width: fit-content;
 }
 :global(h1, h2) {
     scroll-margin: 50px;
+}
+
+@media only screen and (max-width: 600px) {
+    .blogview {
+        grid-template-areas: 
+        "t"
+        "h"
+        "p";
+        grid-template-columns: 1fr;
+    }
+    :global(canvas) {
+        display: none;
+    }
+    .nav {
+       margin-left: 1rem;
+       margin-bottom: 1.5rem;
+    }
 }
 
 </style>

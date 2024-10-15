@@ -1,7 +1,7 @@
 ---
 import { getCollection } from "astro:content"
 import Layout from "../../layouts/Layout.astro"
-import FormattedDate from '../../components/FormattedDate.astro'
+import Card from "../../components/Card.astro";
 
 const posts = (await getCollection('blog')).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
@@ -16,21 +16,14 @@ const posts = (await getCollection('blog')).sort(
 			<h1>
 				Welcome to my blog!
 			</h1>
-			have a look at some of the very fun, excelent, life affirming and life changing posts I've made:
-			<div>ADD POSTS HERE</div>
 		</div>
-		<ul>
+		<ul class="cardGrid">
 			{
 				posts.map(post => (
-					<li>
-						<a href={`/portfolio-v4/blog/${post.slug}`}>
-							<h4>{post.data.title}</h4>
-							<p class="date">
-								{/* <FormattedDate date={post.data.pubDate} /> */}
-								{post.data.pubDate}
-							</p>
-						</a>
-					</li>
+					<Card link={`/portfolio-v4/blog/${post.slug}`} 
+					title={post.data.title} 
+					date={post.data.pubDate}
+					description={post.data.description}/>
 				))
 			}
 		</ul>
@@ -41,5 +34,7 @@ const posts = (await getCollection('blog')).sort(
 <style>
 	.header {
 		text-align: center;
+		font-size: 3rem;
+		margin-top: 10rem;
 	}
 </style>

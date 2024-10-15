@@ -1,0 +1,32 @@
+---
+import { getCollection } from "astro:content"
+import Layout from "../layouts/Layout.astro"
+import Card from "../components/Card.astro";
+
+
+---
+
+<Layout>
+	<div class="naviagtion">
+		<div class="header">
+			<h1>
+                Some fun stuff I've done!
+			</h1>
+		</div>
+		<ul class="cardGrid">
+            <Card link="https://github.com/milrosen/calculus-of-constructions"
+            title="Automatic Proof Checker"
+            description="Based on the calculus of constructions"
+            />
+		</ul>
+	</div>
+	
+</Layout>
+
+<style>
+	.header {
+		text-align: center;
+		font-size: 3rem;
+		margin-top: 10rem;
+	}
+</style>

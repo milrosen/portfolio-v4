@@ -1,4 +1,5 @@
 ---
+import Card from "../components/Card.astro"
 import Layout from "../layouts/Layout.astro"
 ---
 
@@ -6,6 +7,11 @@ import Layout from "../layouts/Layout.astro"
 	<div class="name">
 		Milton Rosenbaum
 	</div>
+	<div class="bio">
+		I am a McGill student in CS and Philosophy, currently in my final year. I am passionate about language, and skilled in python, full stack web development, and functional programming.
+		<div/>	
+	</div>
+
 	<div>
 		<list>
 			<li>
@@ -16,17 +22,36 @@ import Layout from "../layouts/Layout.astro"
 			</li>
 		</list>
 	</div>
+
+	<h1>Some posts I like</h1>
+	<div class="cardGrid">
+		<Card link="/portfolio-v4/blog/post1" title="Language and its Misuse" description="I just *harumph* don't even know what you mean"/>
+	</div>
 	
 </Layout>
 
 <style>
+	.bio {
+		max-width: 37rem;
+		margin-bottom: calc(var(--pad) + 1rem);
+		margin-left: calc(var(--pad) + 1rem);
+	}
 	li {
 		list-style: none;
 		margin-bottom: 1rem;
+		margin-left: calc(var(--pad) + 1rem);
+	}
+	.grid {
+		display: grid;
+		grid-template-columns: 1fr 1fr 1fr;
 	}
 	a {
 		font-size: large;
 		transition: color 100ms ease-out;
+	}
+	h1 {
+		margin-left: var(--pad);
+		margin-top: 3rem;
 	}
 	a:hover {
 		color: rgba(0, 0, 0, 0)
