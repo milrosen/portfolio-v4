@@ -27,6 +27,7 @@ const { title, description, date, link} = Astro.props;
     }
 
     .card {
+        backdrop-filter: blur(10px);
         transition: transform 200ms ease-in-out;
         transform: none;
         padding: calc(var(--pad) * 2);

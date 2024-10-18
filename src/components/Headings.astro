@@ -29,7 +29,11 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
     }
     nav {
         padding-left: var(--pad);
-        position: fixed
+        margin-right: 1px;
+        position: fixed;
+        width: calc((100vw - var(--pad) * 2) / 4 - var(--pad) - 1px);
+        height: calc(100vh - var(--pad) * 2 + 1px);
+        backdrop-filter: blur(20px);
     }
 
     a {

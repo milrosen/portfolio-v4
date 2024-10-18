@@ -60,7 +60,10 @@ const { title, description, pubDate, headings } = Astro.props;
 }
 .nav {
     grid-area: h;
-    min-width: fit-content;
+    min-width: fit-content;  
+    overflow: hidden;
+    /* background-color: rgba(100, 100, 100, 0.875); */
+    /* backdrop-filter: blur(10px); */
 }
 :global(h1, h2) {
     scroll-margin: 50px;

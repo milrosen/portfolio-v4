@@ -5,7 +5,9 @@ body {
 		sans-serif;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-    --pad: max(20px, 4vmin)
+    --pad: max(20px, 4vmin);
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
 }
 
 .name {
