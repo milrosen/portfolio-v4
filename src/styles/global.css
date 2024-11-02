@@ -55,6 +55,9 @@ h1, h2, h3 {
     .cardGrid {
         grid-template-columns: 1fr;
     }
+	.Frame {
+		display: none;
+	}
 }
 
 a {
