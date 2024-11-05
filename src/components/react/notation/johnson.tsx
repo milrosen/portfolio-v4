@@ -74,15 +74,17 @@ const horizontal_line = {
     backgroundColor: 'black'
 }
 
+type flexDirection = 'row' | 'column'
+
 const style_johnson_vertical = {
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'column' as flexDirection,
     gap: '10px'
 
 }
 
 const style_johnson_horizontal = {
     display: 'flex',
-    flexDirection: 'row',
+    flexDirection: 'row' as flexDirection,
     gap: '10px'
 }
