@@ -1,5 +1,3 @@
-// @ts-nocheck
-
 import type { Expression } from "./expression";
 // idea: write the expression literaly in ascii art
 // so, for the first test we could just have Aa = A /\ -A
