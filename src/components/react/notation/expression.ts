@@ -76,3 +76,28 @@ export function find_width(expression: Expression): number {
 
     return 1
 }
+
+export function print_expression(expression: Expression): string {
+    if (expression.literal != null) {
+        return expression.literal
+    }
+
+    if (expression.operands != null) {
+        if (expression.operator == 'or') {
+            return `(${expression.operands.map(print_expression).join(' | ')})`
+        }
+
+        if (expression.operator == 'and') {
+            return `(${expression.operands.map(print_expression).join(' & ')})`
+        }
+    }
+
+    if (expression.operator == 'or') {
+        return `(${print_expression(expression.left)} | ${print_expression(expression.right)})`
+    }
+    if (expression.operator == 'and') {
+        return `(${print_expression(expression.left)} & ${print_expression(expression.right)})`
+    }
+
+    return ''
+}

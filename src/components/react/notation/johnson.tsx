@@ -1,6 +1,6 @@
 import React, { useRef, useState } from 'react'
 import { parse_johnson } from './parse_johnson'
-import { find_height, find_width, type Expression } from './expression'
+import { find_height, find_width, print_expression, type Expression } from './expression'
 
 export default function johnson(props: { text: string }) {
     const [text, setText] = useState(props.text)
@@ -22,7 +22,9 @@ export default function johnson(props: { text: string }) {
         onBlur={() => setViewFormula(true)}
         autoFocus
         value={text}>
-    </textarea>}</>
+    </textarea>}
+    <div>{print_expression(formula)}</div>
+    </>
   )
 }
 
