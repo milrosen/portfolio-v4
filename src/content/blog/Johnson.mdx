@@ -5,26 +5,85 @@ pubDate: 'Nov 2 2024'
 ---
 import Johnson from '../../components/react/notation/johnson.tsx';
 
-# The problem statement: Discursive Dependency Distance
+# What is a Johnson formula?
 
-I have settled on a specific way of comparing the degree a notational system is useful as a tool for reasoning. There are hundreds of ways to do this, each of them purports to be the most rational, universal or objective. My goal is not to create another universal, but to try to express a single way that a notational system can aid with reasoning. 
+## Notation
 
-Discursive dependency distance is a generalization of dependency distance from linguistics. Dependency distance is the linear distance of two words in a dependency grammar parse tree. Dependency grammar is a way of understanding the structure of a sentence, described in terms of how different words are dependent on each other. An example could be the sentence "I prefer the morning flight through Denver" 
+For this post, I will be using a slightly nonstandard logical notation that generalizes easily to Johnson formulas. Specifically, modified Boolean notation where multiplication/adjacency is $\wedge$ and $+$ is $\vee$. So, for example, we might represent $A\vee B$ as $A+B$, and $A\wedge B$ as $AB$. Another notational trick is representing every expression in negation normal form. Meaning that negation can only apply to variables, not parenthesis. This means that we can use lowercase letters to represent the negation of the variable. So to write $\neg (A+B)$ we would need to distribute the negation, $\neg A \times \neg B$, and then could simplify to $ab$. Note that this notation is a bit misleading, since in the standard choice for representing Boolean algebra, the $0, 1$ field, $+ = \oplus$ (xor) not $\vee$. Instead, you could pretend that we're in $\mathbb{N}_0$, that $x = 0 \rightarrow False$, $x \not= 0 \rightarrow True$, and finally $\neg x = 1 -\frac{x}{|x-1|+1}$, and then everything else works out.
+## The problem
+
+A Johnson formula is designed for a very specific task: turning a proposition in Disjunctive Normal Form (or of ands, DNF) into a set of implications. For a simple example, we could look at the formula $A+b$, and see that it is equivalent to $a \rightarrow b$. It is very easy to perform this going from a CNF formula since clauses are basically just implications. So $(C+A+b)(B+a+c)$ can be transformed into $(c \rightarrow Ab)(AC \rightarrow B)$, along with any other reordering of the clauses. However, it requires some genuine algebra to see that those same implications also follow from $BC + aC + Abc$ as well. To make that kind of algebra Easier, Johnson proposed a 2d notational system to visualize the common operations going from one to the other.
+
+# 2D Formulas
+
+In Johnsons system, formulas aren't confined to a single dimension, but instead are able to express their relations in 2D space. Two variables are placed on top of each other to represent $A+B$ and adjacent to each other to represent $AB$ (hence the boolean notation). So, for example, if we wanted to write the CNF formula from earlier, we could write it as: 
+
 $$
-\begin{align*}
-
-I\;prefer\;the\;morning\;flight\;through\;Denver
-\end{align*}
+\begin{array}{c}
+BC \\ \hline
+aC \\ \hline
+Abc \\
+\end{array}
 $$
-becomes:
-{/* we need to escape all of these \, this obviously needs to be changed somehow */}
-<script type="text/tikz">{` 
- \\begin{tikzcd}
-    A \\arrow[r, "\\phi"] \\arrow[d, red]
-      & B \\arrow[d, "\\psi" red] \\\\
-    C \\arrow[r, red, "\\eta" blue]
-      & |[blue, rotate=-15]| D
-  \\end{tikzcd}`}
-</script>
 
-<Johnson client:only="react"/>
+To see how to transform formulas, it's easier to start with simpler examples. For instance, going from $AB + AC$ to $A(B + C)$ is very straightforward in Johnson notation:
+$$
+\begin{array}{ccccc}
+\begin{array}{cc}
+AB \\ \hline
+AC
+\end{array} &
+\rightarrow &
+\begin{array}{c|c}
+A & B \\ \hline
+A & C
+\end{array} & \rightarrow &
+\begin{array}{c|c}
+A & \begin{array}{c} B \\ C \end{array}
+\end{array}
+\end{array}
+$$
+And it's easy to see that going back is just as straightforward. The middle step can be eliminated, but I feel like including it makes the distribution more clear, as well as getting us to the most interesting part of Johnson formulas. 
+
+The cross in the center of the middle formula might've struck you as quite strange, since it's no longer obvious what order of operations we are representing. The formula could faithfully be rendered as $AB+AC$ or as $(A+A)(B+C)$. In this case, the two are exactly equivalent, but in general, $AB + CD \not= (A+C)(B+D)$. This special case, $A=C$ isn't very interesting, but that equality does hold when $A=\neg C$, so $AB + aD = (A+D)(a+B)$. This means that we have access to a very special way of writing these cross-negations.
+
+$$
+\begin{array}{c|c}
+A & B \\ \hline
+D & a
+\end{array}
+$$
+We can now represent both equivalent formulas at the exact same time, freely switching between the two interpretations whenever. Additionally, it makes reading off the implications very easy and semantically meaningful, in this case, those would be $a \rightarrow D$ and $A \rightarrow B$. 
+
+In addition to getting these formulas working, I've added an automatic interpreter of the Johnson formulas (though it doesn't handle that special case yet)
+
+{/* johnson formula */}
+<Johnson client:only="react" text={`C | B\n  | a
+-----
+Ab| c`}/>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+text

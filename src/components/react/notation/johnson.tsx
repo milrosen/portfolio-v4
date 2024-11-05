@@ -2,11 +2,8 @@ import React, { useRef, useState } from 'react'
 import { parse_johnson } from './parse_johnson'
 import { find_height, find_width, type Expression } from './expression'
 
-export default function johnson() {
-    const [text, setText] = useState(`C | B
-  | a
------
-Ab| c`)
+export default function johnson(props: { text: string }) {
+    const [text, setText] = useState(props.text)
     const [viewFormula, setViewFormula] = useState(true)
 
     const formula = parse_johnson(text.split('\n'))
