@@ -3,6 +3,8 @@ title: 'Notes on Discursive Distance'
 description: "How complex is it to reason with a notational system"
 pubDate: 'Nov 2 2024'
 ---
+import Johnson from '../../components/react/notation/johnson.tsx';
+
 # The problem statement: Discursive Dependency Distance
 
 I have settled on a specific way of comparing the degree a notational system is useful as a tool for reasoning. There are hundreds of ways to do this, each of them purports to be the most rational, universal or objective. My goal is not to create another universal, but to try to express a single way that a notational system can aid with reasoning. 
@@ -15,11 +17,14 @@ I\;prefer\;the\;morning\;flight\;through\;Denver
 \end{align*}
 $$
 becomes:
-<script type="text/tikz">
- \begin{tikzcd}
-    A \arrow[r, "\phi"] \arrow[d, red]
-      & B \arrow[d, "\psi" red] \\
-    C \arrow[r, red, "\eta" blue]
+{/* we need to escape all of these \, this obviously needs to be changed somehow */}
+<script type="text/tikz">{` 
+ \\begin{tikzcd}
+    A \\arrow[r, "\\phi"] \\arrow[d, red]
+      & B \\arrow[d, "\\psi" red] \\\\
+    C \\arrow[r, red, "\\eta" blue]
       & |[blue, rotate=-15]| D
-  \end{tikzcd}
+  \\end{tikzcd}`}
 </script>
+
+<Johnson client:only="react"/>
