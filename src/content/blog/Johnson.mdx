@@ -57,11 +57,59 @@ We can now represent both equivalent formulas at the exact same time, freely swi
 
 The sheer convenience of Johnson notation might not be obvious yet, but we can try a longer example, and hopefully the ease of translating between one formula to the next becomes obvious. We will stick with the same general task, going from a DNF formula and trying to turn it into a set of implication relations.
 
+$$
+\begin{array}{ccc}
+\begin{array}{c}
+ABC \\ \hline
+BCD \\ \hline
+aBc \\ \hline
+BcD \\ \hline
+AbD \\ \hline
+abCd
+\end{array} & = &
+\begin{array}{c}
+BCA \\ \hline
+BCD \\ \hline
+Bac \\ \hline
+BDc \\ \hline
+ADb \\ \hline
+Cadb
+\end{array} & = &
+\begin{array}{c|c}
+B & \begin{array}{c}
+CA \\ \hline
+CD \\ \hline
+ac \\ \hline
+Dc \\ 
+\end{array} \\ \hline
+\begin{array}{c}
+AD \\ \hline
+Cad
+\end{array} & b
+\end{array}
+\end{array}
+$$
+$$
+= \begin{array}{c|c}
+B & 
+	\begin{array}{c|c} 
+		C  & \begin{array}{c} A\\ D\end{array} \\ \hline
+		\begin{array}{c} a \\ d \end{array}& c
+	\end{array} \\ \hline
+\begin{array}{c|c}
+A & D \\ \hline
+Cd & a
+\end{array} & b
+\end{array}
+$$
 
+In the first step, we went line-by-line, finding the most common variable, either positive or negative, in this case, $B$, which is present in every single clause in the formula. Next, we shifted it to the right if it was positive, and left if it was negative. Then, we performed the same operation the remaining clauses and variables in the rest of the formula, realizing that in the $B$ formulas, $C$ appeared either positively or negatively in each, and then shifted $C$ as far left as it could go before hitting $B$ and $c$ to the right. We did the exact same thing with $A$ in the bottom left subformula. 
+
+After reordering the variables, all that's left is some very easy grouping. The final formula now acts as a very efficient representation of all the implication relations. Each vertical line is a valid clause, and using the same principle from earlier, we can turn the clauses into implication relations, following whatever ordering makes the most sense. For the vertical slice on the far right, we would get $B + A + Cd$, and we could turn that into an implication relation by negating the first few terms, $ba \rightarrow Cd$. 
 
 In addition to getting these formulas working, I've added an automatic interpreter of the Johnson formulas (though it doesn't handle that special case yet)
 
 {/* johnson formula */}
 <Johnson client:only="react" text={`C | B\n  | a
------
+--+--
 Ab| c`}/>

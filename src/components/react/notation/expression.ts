@@ -1,102 +1,204 @@
-export type Expression = ManyExpr|BinaryExpr|AtomicExpr
+export interface Expression {
+    readonly kind: ExpressionKinds
+    has_similar_operands: boolean
+}
 
-type ManyExpr = {
-    operator: 'or'|'and'
+type ExpressionKinds = 'bexpr'|'atom'|'nexpr'|'qexpr'
+type Operator = 'or'|'and'
+
+export interface OExpr extends Expression {
+    kind: 'bexpr'|'nexpr'|'qexpr'
+    has_similar_operands: true
+    operator: Operator
     operands: Expression[]
-    literal?: never
-    positive?: never
-    left?: never
-    right?: never
 }
 
-type BinaryExpr = {
-    operator: 'or'|'and'
-    left: Expression
+export interface NExpr extends OExpr {
+    kind: 'nexpr'
+}
+
+export function make_nexpr(n: { operator: any; operands: any }): NExpr {
+    return {
+        kind: 'nexpr',
+        operator: n.operator,
+        operands: n.operands,
+        has_similar_operands: true,
+    }
+} 
+
+export interface BExpr extends OExpr {
+    kind: 'bexpr'
+    operands: [Expression, Expression]
     right: Expression
-    literal?: never
-    positive?: never
-    operands?: never
+    left:  Expression
 }
 
-type AtomicExpr = {
-    literal: string
-    positive: boolean
-    operator?: never
-    operands?: never
-    left?: never
-    right?: never
+export function make_bexpr(o: { operator: Operator; operands: Expression[] }): BExpr {
+    if (o.operands.length != 2) throw new Error(`cannot turn expresion with ${o.operands.length} operands into BExpr`) 
+    return {
+        kind: 'bexpr',
+        operator: o.operator,
+        right: o.operands[0],
+        left: o.operands[1],
+        operands: [o.operands[0], o.operands[1]],
+        has_similar_operands: true
+    }
 }
+
+export interface QExpr extends Expression {
+    kind: 'qexpr'
+    operands: [Expression, Expression, Expression, Expression]
+    vertical_view(): BExpr
+    horizontal_view(): BExpr
+}
+
+function is_quad_case(e1: Expression, e2: Expression): Boolean {
+    if (e1.kind != 'atom' && e2.kind != 'atom') {
+        return false
+    } 
+
+    const a1 = e1 as Atom
+    const a2 = e2 as Atom
+
+    return a1.positive != a2.positive && a1.literal.toLowerCase() === a2.literal.toLowerCase()
+}
+
+export function make_qexpr(q: { operands: Expression[] }): QExpr {
+    const [lu, ru, ld, rd] = q.operands
+
+    if (!is_quad_case(lu, rd) && !is_quad_case(ru, ld)) {
+        throw new Error("variables not in quad case, use two BExprs instead!")
+    }
+
+    return {
+        kind: 'qexpr',
+        operands: [lu, ru, ld, rd],
+        vertical_view: () => {
+            return make_bexpr({
+                operator: 'or',
+                operands: [make_bexpr({
+                    operator: 'and',
+                    operands: [lu, ld]
+                }), make_bexpr({
+                    operator: 'and',
+                    operands: [ru, rd]
+                })]
+            })
+        },
+        horizontal_view: () => {
+            return make_bexpr({
+                operator: 'and',
+                operands: [make_bexpr({
+                    operator: 'or',
+                    operands: [lu, ru]
+                }), make_bexpr({
+                    operator: 'or',
+                    operands: [ld, rd]
+                })]
+            })
+
+        },
+        has_similar_operands: false
+    }
+}
+
+export interface Atom extends Expression {
+    kind: 'atom'
+    positive: Boolean
+    literal: String
+}
+
+export function make_atom(a: string): Atom {
+    return {
+        kind: 'atom',
+        positive: a === a.toUpperCase(),
+        literal: a,
+        has_similar_operands: false,
+    }
+}
+
+function operator_height(o: Operator) {
+    if (o == 'or')  {return (a:number, b:number) => a + b}
+    return (a:number, b:number) => Math.max(a, b)
+}
+
 
 export function find_height(expression: Expression): number {
-    if (expression.literal != null) {
+    if (expression.kind === 'atom') {
         return 1
     }
 
-    if (expression.operands != null) {
-        if (expression.operator == 'or') {
-            return expression.operands.map(find_height).reduce((a, b) => a + b)
-        }
-
-        if (expression.operator == 'and') {
-            return expression.operands.map(find_height).reduce((a, b) => Math.max(a, b))
-        }
+    if (expression.has_similar_operands) {
+        const oexpr = expression as OExpr
+        return oexpr.operands.map(find_height).reduce(operator_height(oexpr.operator))
     }
 
-    if (expression.right != null && expression.left != null && expression.operator == 'or') {
-        return find_height(expression.left) + find_height(expression.right)
+    if (expression.kind === 'qexpr') {
+        const qexpr = expression as QExpr
+        return Math.max(
+            find_height(qexpr.operands[0]) + find_height(qexpr.operands[2]),
+            find_height(qexpr.operands[1]) + find_height(qexpr.operands[3])
+        )
     }
-    if (expression.right != null && expression.left != null && expression.operator == 'and') {
-        return Math.max(find_height(expression.left), find_height(expression.right))
-    }
-
     return 1
+}
+
+function operator_width(o: Operator) {
+    if (o == 'or') return (a:number, b:number) => Math.max(a, b)
+    return (a:number, b:number) => a + b
 }
 
 export function find_width(expression: Expression): number {
-    if (expression.literal != null) {
+    if (expression.kind === 'atom') {
         return 1
     }
 
-    if (expression.operands != null) {
-        if (expression.operator == 'and') {
-            return expression.operands.map(find_width).reduce((a, b) => a + b)
-        }
-
-        if (expression.operator == 'or') {
-            return expression.operands.map(find_width).reduce((a, b) => Math.max(a, b))
-        }
+    if (expression.has_similar_operands) {
+        const oexpr = expression as OExpr
+        return oexpr.operands.map(find_width).reduce(operator_width(oexpr.operator))
     }
-
-    if (expression.right != null && expression.left != null && expression.operator == 'and') {
-        return find_width(expression.left) + find_width(expression.right)
+    
+    if (expression.kind === 'qexpr') {
+        const qexpr = expression as QExpr
+        return Math.max(
+            find_height(qexpr.operands[0]) + find_height(qexpr.operands[1]),
+            find_height(qexpr.operands[2]) + find_height(qexpr.operands[3])
+        )
     }
-    if (expression.right != null && expression.left != null && expression.operator == 'or') {
-        return Math.max(find_width(expression.left), find_width(expression.right))
-    }
-
     return 1
 }
 
+function allChildrenAreAtomic(nexpr: NExpr) {
+    for(const child of nexpr.operands) {
+        if (child.kind != 'atom') return false
+    }
+    return true
+}
+
 export function print_expression(expression: Expression): string {
-    if (expression.literal != null) {
-        return expression.literal
+    if (expression.kind === 'atom') {
+        const a = expression as Atom
+        if (a.positive) {
+            return a.literal.toLowerCase()
+        } 
+        return a.literal.toUpperCase()
     }
 
-    if (expression.operands != null) {
-        if (expression.operator == 'or') {
-            return `(${expression.operands.map(print_expression).join(' | ')})`
+    if (expression.kind === 'nexpr') {
+        const nexpr = expression as NExpr
+        if (nexpr.operator === 'and' && allChildrenAreAtomic(nexpr)) {
+            return nexpr.operands.map(r => {
+                const a = r as Atom
+                return a.literal
+            }).join()
         }
-
-        if (expression.operator == 'and') {
-            return `(${expression.operands.map(print_expression).join(' & ')})`
-        }
     }
 
-    if (expression.right != null && expression.left != null && expression.operator == 'or') {
-        return `(${print_expression(expression.left)} | ${print_expression(expression.right)})`
-    }
-    if (expression.right != null && expression.left != null && expression.operator == 'and') {
-        return `(${print_expression(expression.left)} & ${print_expression(expression.right)})`
+    if (expression.has_similar_operands) {
+        const oexpr = expression as OExpr
+        const op = oexpr.operator == 'and' ? '&' : '|'
+
+        return "(" + oexpr.operands.map(print_expression).join(` ${op} `) + ")"
     }
 
     return ''
