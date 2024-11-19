@@ -175,13 +175,13 @@ function allChildrenAreAtomic(nexpr: NExpr) {
     return true
 }
 
-export function print_expression(expression: Expression): string {
+export function print_expression(direction="vertical", expression: Expression): string {
     if (expression.kind === 'atom') {
         const a = expression as Atom
         if (a.positive) {
-            return a.literal.toLowerCase()
+            return a.literal.toUpperCase()
         } 
-        return a.literal.toUpperCase()
+        return a.literal.toLowerCase()
     }
 
     if (expression.kind === 'nexpr') {
@@ -194,11 +194,19 @@ export function print_expression(expression: Expression): string {
         }
     }
 
+    if (expression.kind === 'qexpr') {
+        const qexpr = expression as QExpr
+        if (direction == 'vertical') {
+            return print_expression(direction, qexpr.vertical_view())
+        }
+        return print_expression(direction, qexpr.horizontal_view())
+    }
+
     if (expression.has_similar_operands) {
         const oexpr = expression as OExpr
         const op = oexpr.operator == 'and' ? '&' : '|'
 
-        return "(" + oexpr.operands.map(print_expression).join(` ${op} `) + ")"
+        return "(" + oexpr.operands.map(print_expression.bind(null, direction)).join(` ${op} `) + ")"
     }
 
     return ''

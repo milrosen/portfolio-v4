@@ -1,6 +1,9 @@
-import React, { useRef, useState, type TextareaHTMLAttributes } from 'react'
-import { parse_johnson } from './parse_johnson'
+import React, { useEffect, useRef, useState, type TextareaHTMLAttributes } from 'react'
+import { parse_johnson, JohnsonParseError } from './parse_johnson'
 import { find_height, find_width, print_expression, type Expression, type Atom, type QExpr, type NExpr, type BExpr } from './expression'
+import { Tooltip } from 'react-tooltip'
+import 'react-tooltip/dist/react-tooltip.css'
+
 
 export default function johnson(props: { text: string }) {
     const [text, setText] = useState(props.text)
@@ -8,8 +11,19 @@ export default function johnson(props: { text: string }) {
     const [error, setError] = useState(false)
     const [errorMessage, setErrorMessage] = useState("")
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
+    const [direction, setDirection] = useState('vertical')
+    const [formula, setFormula] = useState(parse_johnson(props.text.split("\n")))
 
-    const formula = parse_johnson(text.split('\n'))
+    useEffect(() => {
+        try {
+            setFormula(parse_johnson(text.split("\n")))
+            setError(false)
+        } catch (_e) {
+            const e = _e as JohnsonParseError
+            setError(true)
+            setErrorMessage(e.message)
+        }
+    }, [text])
 
   return (
     <>{viewFormula ? 
@@ -20,8 +34,12 @@ export default function johnson(props: { text: string }) {
     </div>
     
     : <textarea 
+        id='formula_input_id'
         ref={textAreaRef}
-        style={style_textarea}
+        style={{
+            ...style_textarea,
+            ...error ? error_style : {}
+        }}
         onChange={(e) =>  {
             setText(e.target.value)
         }}
@@ -37,13 +55,30 @@ export default function johnson(props: { text: string }) {
             }
             
         }}
-        onBlur={() => setViewFormula(true)}
+        onBlur={() => {
+            if (error) {
+                textAreaRef.current?.focus()
+            } else {
+                setViewFormula(true)
+            }
+        }}
         autoFocus
         value={text}>
     </textarea>}
-    <div>{print_expression(formula)}</div>
+    {error ? <Tooltip anchorSelect='#formula_input_id'>{errorMessage}</Tooltip> : <></>}
+    <div>{print_expression(direction, formula)}</div>
     </>
   )
+}
+
+const error_style = {
+    borderRadius: "3px",
+    boxShadow: '0px 0px 0px 3px red, 0px 0px 0px 1px white',
+    outline: 'none',
+    border: '2px solid white',
+}
+
+const error_border = {
 }
 
 const style_textarea = {

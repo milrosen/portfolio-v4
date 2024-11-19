@@ -7,7 +7,7 @@ import { type Expression, type BExpr, make_bexpr, make_atom, make_nexpr, make_qe
 //  -----
 //  Ab| c
 
-class JohnsonParseError extends Error {
+export class JohnsonParseError extends Error {
     constructor(message: string) {
         super(message)
     }
@@ -17,9 +17,9 @@ function inconsistent_length(formula: string[]) {
     const len = formula[0].length
 
     for (const line of formula) {
-        if (line.length != len) return false
+        if (line.length != len) return true
     }
-    return true
+    return false
 }
 
 // parsing is then just trying to find a continuous horizontal line of -s or a vertica line of |s
@@ -78,6 +78,9 @@ export function parse_johnson(formula: string[]): Expression {
 }
 
 function parse_literal(line: string) {
+    // ascii only, if not, probably has some spacing issues.
+    // very difficult to determine which, but easy to just throw error
+    if (line.includes('-') || line.includes('|')) throw new JohnsonParseError(`variable name: ${line} contains special layout characters. Perhaps your lines aren't aligned`)
     return make_atom(line)
 }
 
