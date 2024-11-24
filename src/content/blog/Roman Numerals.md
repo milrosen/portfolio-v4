@@ -35,13 +35,13 @@ CCCIII \\
 \end{array}
 $$
 $$
-\begin{alignat}{2}
+\begin{alignat*}{6}
 M&D&CC&L&&II&\\
 &&CCC&&&III&\\ \hline
-M&D& \sout{CCCCC}&L&&\sout{IIIII} \\ \hline
-M&\sout{DD}&&L&V \\ \hline
+M&D& \cancel{CCCCC}&L&&\cancel{IIIII} \\ \hline
+M&\cancel{DD}&&L&V \\ \hline 
 MM&&&L&V
-\end{alignat}
+\end{alignat*}
 $$
 Subtraction simply involves the opposite process, starting from the lowest values, cancel out any symbols that appear in both numbers, and break apart any symbols in the upper number until every symbol in the bottom number can be removed. As such, both addition and subtraction are entirely defined by the grouping rules, and variously by canceling the canceling or grouping operations. 
 
@@ -50,7 +50,7 @@ Subtraction simply involves the opposite process, starting from the lowest value
 For Multiplication, every single combination rule fits in a 6 $\times$ 6 table:
 
 $$
-\begin{array}{c|cc}
+\begin{array}{c|ccccccc}
   & I & V   & X & L & C & D & M \\ \hline
 I & I & V   & X & L & C & D & M \\
 V & V & XXV & L & CCL & D & MMD & \overline{V} \\
@@ -67,7 +67,7 @@ Note that the table has very obvious symmetry. Even if you didn't know any of th
 Actually performing the operation is as simple as lining the two numbers up on either end of the table, and then shuffling the symbols together.
 
 $$
-\begin{array}{c|cc}
+\begin{array}{c|ccccc}
   &M&           D&CC&L&II \\ \hline
 CCC &\overline{CCC}&\overline{LLL}&MMMMMM&DDD&CCCCCC \\
 III &MMM&DDD&CCCCCC&LLL&IIIIII \\
@@ -103,20 +103,53 @@ $$
 Once we start multiplying by $C$, we can see that the result will be much larger than our divisor, so I haven't written out the final result. After working on our original table, we have a very efficient way to perform repeated additions. We know that the $L$ result is the closest we came without going over. Therefore, the first number we have to check is $LX$. If we discover that $LX$ is too large, we check $LV$, too small and we have to check $LXX$. After checking all the way up to $LXXXX$, we know that the next number has to be $LXXXXV$, since if it weren't, we would effectively be checking $C$ again. As such, this scheme only ever needs to multiply by single letters, which is very easy, and only ever needs to perform at most 11 additions after the fact. The red coloring represents an addition step that went over, and if a simplification step resulted in another roman numeral in improper form, the "chain" of simplifications has been represented as alternating slashes.
 
 $$
+\def\ccancel#1{\cancel{\rule{0cm}{0.3cm}{} \mathstrut #1}} 
+\def\bbcancel#1{\bcancel{\rule{0cm}{0.3cm}{} \mathstrut #1}} 
+
 \begin{array}{c|l}
 L & MMDCCCL \\ \hline
-\color{red}{LX} & MM\cancel{DD}CCC\cancel{LL}XX \\
+\color{red}{LX} & MM\ccancel{DD}CCC\ccancel{LL}XX \\
    & \color{red}{MMMCCCCXX} \\ \hline
-LV & MM\bcancel{D\cancel{CCCCC}}CXXXV \\
+LV & MM\bcancel{D}\ccancel{CCCCC}CXXXV \\
    & MMMCXXXV \\ \hline
-LVI & MMMCLXXX\cancel{VV}II \\
+LVI & MMMCLXXX\ccancel{VV}II \\
     & MMMCLXXXXII \\ \hline
-LVII & MMMC\cancel{LL}XXXXVIIII \\
+LVII & MMMC\ccancel{LL}XXXXVIIII \\
  & MMMCCXXXXVIIII \\ \hline
-LVIII & MMMCC\cancel{L\bcancel{XXXX\cancel{VV}}}\cancel{IIIII}I \\
-      & MMMCCCVI \\ \hline
-\color{red}{LVIIII} & MMMCCCL\cancel{VV}II \\
+LVIII & MMMCC\ccancel{L}\bbcancel{ XXXX }\ccancel{\rule{0cm}{0.3cm}{} \mathstrut VV}\ccancel{IIIII}I \\
+      & \color{green}{MMMCCCVI} \\ \hline
+\color{red}{LVIIII} & MMMCCCL\ccancel{VV}II \\
        & \color{red}{MMMCCCLXII}
 \end{array}
 $$
+$$ $$
+If we compare the exact same problem, but with the doubling algorithm, it looks like this
+$$
+\def\ccancel#1{\cancel{\rule{0cm}{0.3cm}{} \mathstrut #1}} 
+\def\bbcancel#1{\bcancel{\rule{0cm}{0.3cm}{} \mathstrut #1}} 
 
+\begin{array}{c|l}
+I & LVII \\ \hline
+II & \ccancel{LL}\ccancel{VV}IIII \\
+   & CXIIII \\ \hline
+IIII & CCXX\ccancel{IIIII}III \\
+     & CCXXVIII \\ \hline
+\ccancel{IIIII}III & CCCC\bbcancel{XXXX}\ccancel{VV}\ccancel{IIIII}I \\
+VIII & CCCCLVI \\ \hline
+\ccancel{VV}\ccancel{IIIII}I & \ccancel{CCCCC}CCC\ccancel{LL}\ccancel{VV}II \\
+XVI & DCCCCXII \\ \hline
+XX\ccancel{VV}II & \ccancel{DD}\ccancel{CCCCC}CCCXXIIII \\
+XXXII & MDCCCXXIIII \\ \hline
+\ccancel{XXXXX}XIIII & MM\ccancel{DD}\ccancel{CCCCC}CXXXX\ccancel{IIIII}III \\
+LXIIII & \color{red}{MMMDCXXXXVIII} \\ \hline
+XXXXVIII 
+
+
+
+\end{array}
+$$
+$$
+\begin{array}{c}
+
+\end{array}
+$$
