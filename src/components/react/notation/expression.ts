@@ -277,7 +277,7 @@ const common_atoms = map_reduce.bind(null,
 
 function find_johnson_variable(expr: Expression) {
     const all_atoms = find_all_atoms(expr)
-    return common_atoms(all_atoms, expr)
+    return false
 }
 
 export function perform_johnson_simplification_step(expr: Expression): Expression {
