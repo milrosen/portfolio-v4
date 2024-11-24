@@ -190,7 +190,7 @@ export function print_expression(direction="vertical", expression: Expression): 
             return nexpr.operands.map(r => {
                 const a = r as Atom
                 return a.literal
-            }).join()
+            }).join('')
         }
     }
 
@@ -210,4 +210,87 @@ export function print_expression(direction="vertical", expression: Expression): 
     }
 
     return ''
+}
+
+function is_operative_only(operator: Operator, expr: Expression): boolean {
+    if (expr.kind === 'atom') return true
+    if (expr.kind === 'nexpr') {
+        const nexpr = expr as NExpr
+        return nexpr.operator === operator && allChildrenAreAtomic(nexpr)
+    }
+    if (expr.kind != 'bexpr') return false
+    const bexpr = expr as BExpr
+
+    if (bexpr.operator != 'or') return false
+
+    return is_operative_only(operator, bexpr.right) && 
+           is_operative_only(operator, bexpr.left)
+}
+
+function is_operative_normal_form(operatorA: Operator, operatorB: Operator, expr: Expression): boolean {
+    if (expr.kind != 'bexpr') return false
+    const bexpr = expr as BExpr
+
+    if (bexpr.operator != operatorA) return false
+
+    const r = bexpr.right
+    const l = bexpr.left
+    return (is_operative_normal_form(operatorA, operatorB, r) || is_operative_only(operatorB, r)) && 
+           (is_operative_normal_form(operatorA, operatorB, l) || is_operative_only(operatorB, l)) 
+}
+
+export const is_clause = is_operative_only.bind(null, 'or')
+export const is_cnf = is_operative_normal_form.bind(null, 'and', 'or')
+
+export const is_conjunction_clause = is_operative_only.bind(null, 'and')
+export const is_dnf = is_operative_normal_form.bind(null, 'or', 'and')
+
+type MapTo<T> = (s: Expression) => T
+type Combine<T> = (a: any, b: any) => T
+function map_reduce<T>(g: Combine<T>, f: MapTo<T>, initial:T, expr: Expression): T {
+    if (expr.kind === 'atom') return f(expr)
+    
+    if (expr.has_similar_operands) {
+        const o = expr as OExpr
+        return o.operands.map(map_reduce.bind(null, g, f, initial)).reduce(g) as T
+    }
+
+    if (expr.kind === 'qexpr') {
+        const q = expr as OExpr
+        return q.operands.map(map_reduce.bind(null, g, f, initial)).reduce(g) as T
+    }
+
+    return initial
+}
+
+const find_all_atoms = map_reduce.bind(null, (
+    a, b) => a.union(b), 
+    (e: Expression) => new Set((e as Atom).literal),
+    new Set()
+)
+
+const common_atoms = map_reduce.bind(null, 
+    (a, b) => a.intersection(b), 
+    (e: Expression) => new Set((e as Atom).literal),
+    new Set()
+)
+
+function find_johnson_variable(expr: Expression) {
+    const all_atoms = find_all_atoms(expr)
+    return common_atoms(all_atoms, expr)
+}
+
+export function perform_johnson_simplification_step(expr: Expression): Expression {
+    if (expr.kind != 'bexpr') return expr
+    const bexpr = expr as BExpr
+
+    if (is_dnf(expr)) {
+        const johnson_variable = find_johnson_variable(expr)
+        console.log(johnson_variable)
+    }
+    
+    return make_bexpr({
+        operator: bexpr.operator,
+        operands: bexpr.operands.map(perform_johnson_simplification_step)
+   })
 }

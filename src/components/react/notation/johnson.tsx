@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, type TextareaHTMLAttributes } from 'react'
 import { parse_johnson, JohnsonParseError } from './parse_johnson'
-import { find_height, find_width, print_expression, type Expression, type Atom, type QExpr, type NExpr, type BExpr } from './expression'
+import { find_height, find_width, print_expression, type Expression, type Atom, type QExpr, type NExpr, type BExpr, is_cnf, is_dnf, perform_johnson_simplification_step } from './expression'
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -16,7 +16,9 @@ export default function johnson(props: { text: string }) {
 
     useEffect(() => {
         try {
-            setFormula(parse_johnson(text.split("\n")))
+            const f = parse_johnson(text.split('\n'))
+            setFormula(f)
+            console.log(perform_johnson_simplification_step(f))
             setError(false)
         } catch (_e) {
             const e = _e as JohnsonParseError
@@ -76,9 +78,6 @@ const error_style = {
     boxShadow: '0px 0px 0px 3px red, 0px 0px 0px 1px white',
     outline: 'none',
     border: '2px solid white',
-}
-
-const error_border = {
 }
 
 const style_textarea = {

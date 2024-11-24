@@ -45,12 +45,11 @@ A & \begin{array}{c} B \\ C \end{array}
 $$
 And it's easy to see that going back is just as straightforward. The middle step can be eliminated, but I feel like including it makes the distribution more clear, as well as getting us to the most interesting part of Johnson formulas. 
 
-The cross in the center of the middle formula might've struck you as quite strange, since it's no longer obvious what order of operations we are representing. The formula could faithfully be rendered as $AB+AC$ or as $(A+A)(B+C)$. In this case, the two are exactly equivalent, but in general, $AB + CD \not= (A+C)(B+D)$. This special case, $A=C$ isn't very interesting, but that equality does hold when $A=\neg C$, so $AB + aD = (A+D)(a+B)$. This means that we have access to a very special way of writing these cross-negations.
-
+The cross in the center of the middle formula might've struck you as quite strange, since it's no longer obvious what order of operations we are representing. The formula could faithfully be rendered as $AB+AC$ or as $(A+A)(B+C)$. In this case, the two are exactly equivalent, but in general, $XY + ZW \not= (X+Z)(Y+W)$. The above special case, $X=Z$ isn't very interesting, but the equality *also* holds when $X=\neg W$, so $XY + Zx = (X+Z)(x+Y)$ $=$ $Xx + XY + Zx + ZY$ $=$ $XY + xZ + ZY$, and then we can note that $ZY \rightarrow XY + xZ$, so the $ZY$ term is redundant. This mini-proof means that this unique quad-formula really doesn't have to worry about parenthesis, unlocking a unique and powerful way to reduce formulas, expressable only in two dimensions.
 $$
 \begin{array}{c|c}
-A & B \\ \hline
-D & a
+X & Y \\ \hline
+Z & x
 \end{array}
 $$
 We can now represent both equivalent formulas at the exact same time, freely switching between the two interpretations whenever. Additionally, it makes reading off the implications very easy and semantically meaningful, in this case, those would be $a \rightarrow D$ and $A \rightarrow B$. 
@@ -73,7 +72,7 @@ BCD \\ \hline
 Bac \\ \hline
 BDc \\ \hline
 ADb \\ \hline
-Cadb
+Cdab
 \end{array} & = &
 \begin{array}{c|c}
 B & \begin{array}{c}
@@ -94,7 +93,7 @@ $$
 B & 
 	\begin{array}{c|c} 
 		C  & \begin{array}{c} A\\ D\end{array} \\ \hline
-		\begin{array}{c} a \\ d \end{array}& c
+		\begin{array}{c} a \\ D \end{array}& c
 	\end{array} \\ \hline
 \begin{array}{c|c}
 A & D \\ \hline
