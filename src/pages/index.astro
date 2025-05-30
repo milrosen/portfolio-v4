@@ -1,72 +1,86 @@
 ---
 import Card from "../components/Card.astro"
 import Layout from "../layouts/Layout.astro"
+import { getCollection } from "astro:content"
+
+const posts = (await getCollection('blog')).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf()
+);
+
 ---
 
 <Layout>
-	<div class="name">
-		Milton Rosenbaum
+	<div class="header">
+		<h1>Milton Rosenbaum</h1>
 	</div>
 	<div class="content">
 
 	<div class="bio">
 		I am a McGill student in CS and Philosophy, currently in my final year. I am passionate about language, and skilled in python, full stack web development, and functional programming.
-		<div/>	
-	</div>
+		<a href="/portfolio-v4/projects"><h1>Projects</h1></a>
+		<ul class="postList">
 
-	<div>
-		<list>
-			<li>
-				<a href="/portfolio-v4/blog">Blog</a>
-			</li>
-			<li>
-				<a href="/portfolio-v4/projects">Projects</a>
-			</li>
-		</list>
-	</div>
+		</ul>
+		<h1>Some posts I like</h1>
+		<ul class="postList">
+		 {
+			posts.map(post => (
+				<Card link={`/portfolio-v4/blog/${post.slug}`} 
+				title={post.data.title} 
+				date={post.data.pubDate}
+				description={post.data.description}/>
+			))
 
-	<h1>Some posts I like</h1>
-	<ul class="cardGrid">
-		<Card link="/portfolio-v4/blog/post1" title="Language and its Misuse" description="I just *harumph* don't even know what you mean"/>
-	</ul>
+		 }
+
+		</ul>
 	</div>
 	
 </Layout>
 
 <style>
+	.header {
+		text-align: center;
+		font-size: 3rem;
+		margin-top: 10rem;
+		margin-bottom: 5rem;
+
+	}
 	.bio {
 		max-width: 37rem;
-		margin-bottom: calc(var(--pad) + 1rem);
-		margin-left: calc(var(--pad) + 1rem);
+		margin: calc(var(--pad) + 1rem);
+		display: flex;
+		flex-direction: column;
+		gap: 3rem;
 	}
 	li {
 		list-style: none;
 		margin-bottom: 1rem;
 		margin-left: calc(var(--pad) + 1rem);
 	}
-	.grid {
-		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-	}
 	a {
 		font-size: large;
 		transition: color 100ms ease-out;
 	}
 	h1 {
-		margin-left: var(--pad);
-		margin-top: 3rem;
+		margin-bottom: 0px;
 	}
-	a:hover {
-		color: rgba(0, 0, 0, 0)
+	.content {
+		align-items: center;
+		display: flex;
+		flex-direction: column;
 	}
-	a::before {
-		transition: color 100ms ease-in;
-		content: "⬤";
-		color: rgba(0, 0, 0, 0);
-		position: relative;
-		right: -1.2rem
-	}
-	a:hover::before {
-		color: rgba(0, 0, 0, 1)
+
+	@media only screen and (max-width:600px) {
+		.header {
+			font-size: 2rem;
+		}
+		.bio {
+			margin: 0px;
+		}
+
+		h1 {
+			text-align: center;
+		}
 	}
 </style>

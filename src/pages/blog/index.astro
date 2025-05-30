@@ -8,8 +8,6 @@ const posts = (await getCollection('blog')).sort(
 );
 ---
 
-
-
 <Layout>
 	<div class="naviagtion">
 		<div class="header">
@@ -17,7 +15,7 @@ const posts = (await getCollection('blog')).sort(
 				Welcome to my blog!
 			</h1>
 		</div>
-		<ul class="cardGrid">
+		<ul class="postList">
 			{
 				posts.map(post => (
 					<Card link={`/portfolio-v4/blog/${post.slug}`} 

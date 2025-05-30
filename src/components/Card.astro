@@ -10,10 +10,12 @@ const { title, description, date, link} = Astro.props;
 
 <li>
      <a class="card" href={link}>
+        <div class="title">
         <h4>{title}</h4>
         <p class="desc">
             {description}
         </p>
+        </div>
         <p class="date">
             {/* <FormattedDate date={post.data.pubDate} /> */}
             {date}
@@ -23,26 +25,32 @@ const { title, description, date, link} = Astro.props;
 
 <style>
     .desc {
-        max-width: 6rem;
+        max-width: 15rem;
+        color: #6e6e6e;
+        text-align: left;
+        font-size: small;
     }
 
     .card {
-        backdrop-filter: blur(10px);
         transition: transform 200ms ease-in-out;
         transform: none;
-        padding: calc(var(--pad) * 2);
-        background-color: rgba(255, 255, 255, 0.856);
-        margin: 3rem;
-        text-align: center;
+        padding: calc(var(--pad) * 1);
+        background-color: rgba(255, 255, 255);
         display: flex;
         align-items: center;
-        flex-direction: column;
         /* border: 1px solid black; */
     }
+
     .card:hover {
         transform: scale(1.05);
     }
+
+    .card + .card {
+        border-top: solid 1px black;
+    }
     .date {
         font-size: 0.7rem;
+        margin-left: auto;
+        color: #6e6e6e;
     }
 </style>

@@ -10,6 +10,12 @@ body {
 	box-sizing: border-box;
 }
 
+.postList {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+}
+
 .name {
     padding: var(--pad);
 	transform: translateY(-.32em);
@@ -29,10 +35,6 @@ h1, h2, h3 {
     font-weight: 010;
 }
 
-.cardGrid {
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr;
-}
 
 .Frame {
 	margin: var(--pad);
