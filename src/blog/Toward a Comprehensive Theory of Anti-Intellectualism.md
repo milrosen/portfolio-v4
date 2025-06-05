@@ -2,6 +2,7 @@
 title: Anti-Intellectualism
 description: Which inferences are the good ones?
 pubDate: Feb 2 2025
+draft: "true"
 ---
 # Introduction
 

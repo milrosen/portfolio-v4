@@ -21,7 +21,7 @@ const { title, description, pubDate, headings } = Astro.props;
                 <div class="header">
                     <h1>{title}</h1>
                     <h2>{description}</h2>
-                    <h4>{pubDate}</h4>
+                    <h4>{pubDate.toDateString()}</h4>
                 </div>
                 <div class="nav">
                     <Headings headings={headings}/>
