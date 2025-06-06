@@ -11,6 +11,27 @@ const posts = (await getCollection('blog',
 );
 
 posts.forEach(({data}) => console.log(data.pubDate))
+
+const projects = [
+	{"title": "Putting Numbers Behind the Numerals",
+	"description": "the result of an independent study in Roman Numeral algebra algorithms for Prof. Dirk Schlimm. Measured, programatically, how difficult it actually is to use Roman numerals",
+	"link": "/portfolio-v4/Roman_Numerals.pdf"},
+	{"title": "Proof Checker", 
+	"description": "a programming language where proofs and programs are the same thing. Based on the Calculus of Constructions", 
+	"link":"https://github.com/milrosen/calculus-of-constructions"},
+	{"title": "Taming Macros",
+	"description": "an implementation of the paper \"Taming Macros\" by Ryan Culpepper and Matthias Felleisen",
+	"link": "https://github.com/milrosen/comp523project"},
+	{"title": "Subject Reduction for PTS",
+	"description": "a proof of subject reduction (also called confluence or Church-Rossner) for a class of theoretical programming languages called Pure Type Systems",
+	"link": "https://github.com/milrosen/comp527project"},
+	{"title": "RICS in Pytorch",
+	"description":  "an implementation of Rotationally Invariant ConvolutionS (RICS) in Pytorch, a type of convolution that trades translational invariance for rotational invariance",
+	"link": "https://github.com/milrosen/RICS-in-pytorch",},
+	{"title": "SAT solving in Haskell",
+	"description": "a small programming language for specifying and solving SAT problems, has automatic skolemization for finite first-order SAT as well",
+	"link": "https://github.com/milrosen/smt"}
+]
 ---
 
 <Layout>
@@ -21,11 +42,29 @@ posts.forEach(({data}) => console.log(data.pubDate))
 
 	<div class="bio">
 		I am a McGill student in CS and Philosophy, currently in my final year. I am passionate about language, and skilled in python, full stack web development, and functional programming.
-		<a href="/portfolio-v4/projects"><h1>Projects</h1></a>
-		<ul class="postList">
-
+		<div class="navLinks">
+		<a href="/portfolio-v4/#projects">
+			<h1 id="projects">Projects</h1>
+		</a>
+		<a href="/portfolio-v4/#blog">
+			<h1>Blog</h1>
+		</a>
+		<a href="/portfolio-v4/cv_milton_rosenbaum.pdf">
+			<h1>CV</h1>
+		</a>
+		</div>
+			<ul class="postList">
+			{
+				projects.map(project => (
+					<Card link={project.link||""}
+					title={project.title}
+					description={project.description}
+					/>
+	
+				))
+			}
 		</ul>
-		<h1>Recent Posts</h1>
+		<h1 id="blog">Recent Posts</h1>
 		<ul class="postList">
 		 {
 			posts.map(post => (
@@ -64,7 +103,23 @@ posts.forEach(({data}) => console.log(data.pubDate))
 	}
 	a {
 		font-size: large;
-		transition: color 100ms ease-out;
+		display: inline-block;
+		position: relative;
+	}
+	a::after {
+		content:"";
+		position: absolute;
+		width: 100%;
+		height: 2px;
+		bottom: 4px;
+		left: 0px;
+		background-color: black;
+		transition: transform 0.25s ease-out;
+		transform-origin: left;
+		transform: scaleX(0);
+	}
+	a:hover::after{
+		transform: scaleX(1);
 	}
 	h1 {
 		margin-bottom: 0px;
@@ -73,6 +128,10 @@ posts.forEach(({data}) => console.log(data.pubDate))
 		align-items: center;
 		display: flex;
 		flex-direction: column;
+	}
+	.navLinks {
+		display: flex;
+		justify-content: space-around;
 	}
 
 	@media only screen and (max-width:600px) {
