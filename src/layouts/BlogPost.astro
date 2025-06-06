@@ -47,66 +47,39 @@ const { title, description, pubDate, headings } = Astro.props;
 
 <style>
 .blogview {
-    display: grid;
-    grid-template-areas: 
-    "h t"
-    "h p";
-    grid-template-columns: 1fr 3fr;
-}
-.container {
-    grid-area: p;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
 }
 .content {
     background: white;
-    box-shadow: 0px 100px 0px white,
-                0px -300px 0px white,
-                300px 0px 0px 300px white,
-                299px 0px 0px 300px black;
-
-    padding-left: 15vw; 
-    padding-right: 20vw;
     padding-bottom: 20rem;
+    width: calc(min(90vw, 40em))
 }
 .header {
-    grid-area: t;
     z-index: 1;
-    padding-left: 15vw; 
-    padding-right: 20vw;
+    width: calc(min(90vw, 40em));
 }
 .nav {
-    grid-area: h;
     min-width: fit-content;  
-    overflow: hidden;
+    height: 0px;
 }
 :global(h1, h2) {
     scroll-margin: 50px;
 }
 
+h4 {
+    color: gray;
+    font-weight: 100;
+}
+
 @media only screen and (max-width: 600px) {
-    .blogview {
-        grid-template-areas: 
-        "t"
-        "h"
-        "p";
-        grid-template-columns: 1fr;
-    }
     :global(canvas) {
         display: none;
     }
     .nav {
-        padding-left: 2rem;
-        padding-bottom: 2rem;
-        margin: 0px;
-        min-width: none;
-    }
-    .content {
-        padding: 1rem;
-        box-shadow: 0px 100px 0px white,
-                0px -300px 0px white,
-                300px 0px 0px 300px white;
-    }
-    .header {
-        padding: 1rem;
+        width: 100%;
+        height: fit-content;
     }
 }
 

@@ -28,11 +28,10 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
         font-size: larger;
     }
     nav {
-        padding-left: var(--pad);
         margin-right: 1px;
         position: fixed;
-        width: calc((100vw - var(--pad) * 2) / 4 - var(--pad) - 1px);
-        height: calc(100vh - var(--pad) * 2 + 1px);
+        top: var(--pad);
+        margin-left: calc(var(--pad) + 20em);
     }
 
     a {
@@ -46,6 +45,7 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
         margin-left: 1rem;
         margin-bottom: -0.5rem;
     }
+    
 
     .small::before {
         content: "";
@@ -59,16 +59,17 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
     }
 
     @media only screen and (max-width: 600px) {
-        nav {
-            position: relative;
-            padding: 0px;
-        }
-        nav {
-          height: fit-content;
-          width: fit-content;
-          min-width: none;
-        }
+      nav {
+        margin-left: var(--pad);
+        position: relative;
+        top: -20px;
+
+      }
+
+      h2 {
+        display: none;
+      }
+
     }
-    
 
 </style>
