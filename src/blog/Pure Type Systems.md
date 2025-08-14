@@ -25,34 +25,36 @@ The underlines are pronounced "weak" (like the weak functions from LF). P2 is st
 
 ## Kinds of dependence
 
-There are four kinds of dependency at play (but only three directions?)
+There are four kinds of dependency at play 
 - **Terms depending on Terms** ($\star \leadsto \star$)
 - **Terms depending on Types** $(\Box \leadsto \star)$
 - **Types depending on Terms** $(\star \leadsto \Box)$
 - **Types depending on Types** ($\Box \leadsto \Box$)
-(these are, presumably the $\Box \leadsto \star$ style rules  from the Henk paper)
 
 Terms depending on terms is very common, any function application, $F\ x$, is an example.
 
 Types depending on terms is complex, imagine a type indexed by a natural number, in the paper this is $A^n \rightarrow B$ (so the functions of the nth A to B), could be defined as:
 - $A^0 \rightarrow B = B$ 
 - $A^{n+1} \rightarrow B = A \rightarrow (A^n \rightarrow B)$ 
+
 So here $A$ is always the type, just the type that depends on $n$ (are all of these types equal to each other, do they all normalize to the same term?)
 
-Types depending on types is just normal polymorphism, like how 'a-s work in OCaml (are there weak and strong versions of this? what's the difference?)
+Types depending on types is just normal polymorphism, like how $\verb|'a|$s work in OCaml
 
 Types depending on terms has us introduce the cartesian product. So 
 $$\lambda x: A . b_a$$
 has type
 $$\Pi a : A . B_a$$
-Where $B_a$ may or may not depend on $a$. Note that if it doesn't, like if $B_a = B_a'$ for every $a:A$ $a' : A$, then this dependent product is just exactly the set $B^A$, which is exactly the set of all functions $A \rightarrow B$ (isn't that lovely)
-(what does it mean for terms to depend on types?)
+Where $B_a$ may or may not depend on $a$. 
 
+Note that if it doesn't, like if $B_a = B_a'$ for every $a:A$ $a' : A$, then this dependent product is just exactly the set $B^A$, which is exactly the set of all functions $A \rightarrow B$ (isn't that lovely)
+
+Further, this is also how "weak functions" work. Since $\lambda P$ can have dependent types, but the computational behavior cannot depend on those dependent types, we effectively have only one "function" $A \rightarrow B$ (or, maybe, that functions cannot be further differentiated after they are typed, something like that), so the cardinality of the entire function space is just the size of "that" function's function space, which is $A \times B$. 
 ## Box and Star
 
 In a simply typed system, types aren't part of the language, and are given in the metalanguage. (with a few constructors like Arrow or maybe List to enable compound types, but all the atomic types must be metalanguage)
 
-In non simple systems (which ones?) it makes sense to add introducing new types as part of the formal system itself. For this, we need to extend the $:$ judgement. It is now the "kinding" judgement, so the "kind" of a term is its type, but the *kind* of a type is $\star$. We also extend our $\vdash$ to say what kind of new types. So instead of being a separate rule for the typing judgement, or part of the metalanguage, I can write that $\Gamma, A : \star \vdash A \rightarrow A : \star$ (or, if a is a type, then so is a function from $A$ to $A$). 
+In non simple systems it makes sense to add introducing new types as part of the formal system itself. For this, we need to extend the $:$ judgement. It is now the "kinding" judgement, so the "kind" of a term is its type, but the *kind* of a type is $\star$. We also extend our $\vdash$ to say what kind of new types. So instead of being a separate rule for the typing judgement, or part of the metalanguage, I can write that $\Gamma, A : \star \vdash A \rightarrow A : \star$ (or, if a is a type, then so is a function from $A$ to $A$). 
 \usetheme frankfurt, \colortheme seahorse
 Next, we can reintroduce our dependencies from earlier, now as elements of the formal language itself:
 
@@ -62,7 +64,7 @@ $$
  (\lambda \alpha : \star . \mathbf{I}_\alpha) &: (\Pi\alpha : \star . \alpha \rightarrow \alpha)  \\
 (\lambda n : \mathbb{N} . A^n \rightarrow B) &: (\mathbb{N} \rightarrow \star) \\
 (\lambda \alpha : \star . \alpha \rightarrow \alpha) &: (\star \rightarrow \star)
-\end{align*} \\
+\end{align*}
 $$
 In this case, the first one is a term depending on a term. It's just a function. The next one is a dependent product version of $A \rightarrow A$, where $\alpha$ might appear in $\mathbf{I}$. The next one is a dependent type. In the previous example, the $\textbf{I}_\alpha$ meant that alpha could appear in $\textbf{I}$. Does the $A^n$ mean the same thing here? Like, is it just that the term $A$ can depend on $n$?
 
@@ -141,7 +143,7 @@ This system is "connected" to second order propositional logic, to see how, cons
 ## $\lambda\underline{\omega}$ 
 $$
 \begin{align*}
-vdash & (\lambda \alpha:\star . \alpha \rightarrow \alpha) : (\star \rightarrow \star) : \Box \\
+\vdash & (\lambda \alpha:\star . \alpha \rightarrow \alpha) : (\star \rightarrow \star) : \Box \\
 \beta : \star \vdash& (\lambda \alpha : \star .\alpha \rightarrow \alpha )\beta : \star\\
 \beta : \star, x : \beta \vdash& (\lambda y :\beta.x ) : (\lambda\alpha : \star . \alpha \rightarrow \alpha)\beta \\
 \end{align*}
