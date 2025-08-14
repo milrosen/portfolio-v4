@@ -118,7 +118,7 @@ For some more definitions:
 Every legal term is either an object, type, constructor, or kind. All types are also constructors. All corners of the cube have Church-Rosner, (multistep preserves beta equality, and determinism) Preservation (stepping terms are the same type) Normalization (all terms have or are values) Deterministic typing (all possible types of a term are beta equivalent)
 
 # Examples
-## in $\lambda \rightarrow$, 
+## $\lambda \rightarrow$, 
 $$
 \begin{align*}
 A : \star &\vdash (A \rightarrow A ) : \star\\
@@ -128,7 +128,7 @@ A : \star, b : A &\vdash ((\lambda a : A.a)\ b) : A\\
 A : \star, B : \star, c : A, b : B &\vdash ((\lambda a : A. b) c) : B
 \end{align*}
 $$
-## In $\lambda \mathbf{2}$,
+## $\lambda \mathbf{2}$,
 $$
 \begin{align*}
 \alpha : \star &\vdash (\lambda a : \alpha .a) : (\alpha \rightarrow \alpha) \\
@@ -138,7 +138,7 @@ A : \star &\vdash (\lambda \alpha : \star .\lambda a : \alpha . a) A : (A \right
 $$
 This system is "connected" to second order propositional logic, to see how, consider the following formula: $$ \vdash (\lambda\beta : \star . \lambda a : (\Pi \alpha : \star.\alpha). a ((\Pi \alpha : \star. \alpha) \rightarrow \beta)a):(\Pi \beta : \star . (\Pi \alpha : \star . \alpha ) \rightarrow \beta)$$It's easy to see that $\Pi\alpha:\star.\alpha$ is equivalent to the proposition $\forall P. P$ in second order logic, so replacing $\Pi\alpha:\star.\alpha$ with $\bot$, gives us: $$\vdash (\lambda \beta:\star.\lambda a:\bot . a\beta):(\Pi \beta : \star.\bot \rightarrow \beta) $$ My guess is that the below term has some kind of type-variable inference, not sure how to implement that, but it clearly isn't just using the abbreviation. 
 
-## In $\lambda\underline{\omega}$ 
+## $\lambda\underline{\omega}$ 
 $$
 \begin{align*}
 vdash & (\lambda \alpha:\star . \alpha \rightarrow \alpha) : (\star \rightarrow \star) : \Box \\
@@ -157,7 +157,7 @@ $$
 
 Next, observe the parameterized $\lambda$-rule in action, since $\star \rightarrow \star : \Box$, and $f \vdash f(f\ \alpha) : \star : \Box$, we can use the rule with $s_1, s_2 = (\Box, \Box)$. 
 
-## In $\lambda \textbf{P}$ (LF)
+## $\lambda \textbf{P}$ (LF)
 $$ 
 \begin{align*}
 A : \star \vdash &  (A \rightarrow \star) : \Box
@@ -192,7 +192,7 @@ $$
 A proof of the claim that $(\forall x \in A . Pa \rightarrow Q) \rightarrow (\forall a \in A. Pa) \rightarrow Q)$ 
 The last step is because $\Pi x : A . B \equiv A \rightarrow B$ when $x$ doesn't appear in $B$ .  
 
-## In $\lambda \omega$. 
+## $\lambda \omega$. 
 First, let $\alpha \wedge \beta \equiv\Pi\gamma : \star . (\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow \gamma$ 	
 $$
 \alpha : \star, \beta : \star \vdash \alpha \wedge \beta : \star
@@ -206,7 +206,7 @@ and requires product types (since its most general type should have a variable)(
 Next, we define $K : (\Pi \alpha : \star . \Pi \beta : \star . \alpha \rightarrow \beta \rightarrow \alpha) \equiv \lambda\alpha:\star \lambda\beta:\star\lambda x:\alpha\lambda y : \beta . x$ Which is the polymorphic "ignore the second argument" function. 
 Then, we can have the same argument that 
 
-## In $\lambda \textbf{P2}$
+## $\lambda \textbf{P2}$
 (second order predicate logic)
 $$
 \begin{align*}
@@ -223,7 +223,7 @@ $$
 This is the constructor of a diagonalization of a predicate
 
 
-## In $\lambda\textbf{P}\omega = \lambda \textbf{C}$ 
+## $\lambda\textbf{P}\omega = \lambda \textbf{C}$ 
 
 
  if we define $\textbf{ALL} \equiv (\lambda A : \star\lambda P : A \rightarrow \star.\Pi a:A.Pa)$ then,$$A : \star, P :(A \rightarrow \star) \vdash \textbf{ALL}\ A\ P : \star \mathrel{\text{and}} (

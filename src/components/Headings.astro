@@ -16,7 +16,7 @@ const filteredHeadings = headings.filter((heading) => heading.depth <= 2);
     {
       filteredHeadings.map((heading) => (
         <li>
-          <a class={heading.depth == 1 ? "big" : "small"} href={`#${heading.slug}`}>{heading.text}</a>
+          <a class={heading.depth == 1 ? "big" : "small"} href={`#${heading.slug}`}>{heading.text.split('\\')[0]}</a>
         </li>
       ))
     }
