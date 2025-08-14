@@ -1,5 +1,5 @@
 ---
-draft: "false"
+draft: false
 description: a programmatic foundation of logic
 pubDate: Aug 14 2025
 title: Pure Type Systems
