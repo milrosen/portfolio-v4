@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState, type TextareaHTMLAttributes } from 'react'
 import { parse_johnson, JohnsonParseError } from './parse_johnson'
-import { find_height, find_width, print_expression, type Expression, type Atom, type QExpr, type NExpr, type BExpr, is_cnf, is_dnf, perform_johnson_simplification_step } from './expression'
+import { find_height, find_width, print_expression, type Expression, type Atom, type QExpr, type NExpr, type BExpr, is_cnf, is_dnf, perform_johnson_simplification_step, is_clause, is_conjunction_clause } from './expression'
 import { Tooltip } from 'react-tooltip'
 import 'react-tooltip/dist/react-tooltip.css'
 
@@ -18,7 +18,7 @@ export default function johnson(props: { text: string }) {
         try {
             const f = parse_johnson(text.split('\n'))
             setFormula(f)
-            console.log(perform_johnson_simplification_step(f))
+            // console.log(perform_johnson_simplification_step(f))
             setError(false)
         } catch (_e) {
             const e = _e as JohnsonParseError
@@ -67,7 +67,10 @@ export default function johnson(props: { text: string }) {
         autoFocus
         value={text}>
     </textarea>}
-    {error ? <Tooltip anchorSelect='#formula_input_id'>{errorMessage}</Tooltip> : <></>}
+    {error ? 
+        <Tooltip anchorSelect='#formula_input_id'>{errorMessage}</Tooltip> 
+    : <button onClick={() => setFormula(perform_johnson_simplification_step(formula))}>Perform Simplification Step</button>}
+    
     <div>{print_expression(direction, formula)}</div>
     </>
   )
@@ -139,11 +142,16 @@ function DisplayJohnson({formula}: {formula: Expression}) {
     if (formula.kind === 'nexpr') {
         const nexpr = formula as NExpr
         const vertical = nexpr.operator == 'or'
-        const line_style = vertical ? horizontal_line : vertical_line 
+        let line_style = vertical ? horizontal_line : vertical_line 
+        if (is_clause(formula) || is_conjunction_clause(formula)) line_style = invisible
         const direction_style = vertical ? style_johnson_vertical : style_johnson_horizontal
         return (
             <div style={direction_style}>
-                {nexpr.operands.map(op => DisplayJohnson({formula: op}))}
+                {nexpr.operands.map((op, i) => 
+                   (<>
+                    {i === 0 ? <></> : <div style={line_style}></div>}
+                    {DisplayJohnson({formula: op})}
+                    </>))}
             </div>
         )
     }
@@ -161,6 +169,12 @@ const vertical_line = {
     display: 'block',
     width: grid_variables.LINE_THICKNESS,
     backgroundColor: grid_variables.LINE_COLOR,
+}
+
+const invisible = {
+    display: 'none',
+    width: '0px',
+    backgroundColor: 'white'
 }
 
 const horizontal_line = {

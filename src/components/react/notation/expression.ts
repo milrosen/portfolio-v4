@@ -221,7 +221,7 @@ function is_operative_only(operator: Operator, expr: Expression): boolean {
     if (expr.kind != 'bexpr') return false
     const bexpr = expr as BExpr
 
-    if (bexpr.operator != 'or') return false
+    if (bexpr.operator != operator) return false
 
     return is_operative_only(operator, bexpr.right) && 
            is_operative_only(operator, bexpr.left)
@@ -263,8 +263,8 @@ function map_reduce<T>(g: Combine<T>, f: MapTo<T>, initial:T, expr: Expression):
     return initial
 }
 
-const find_all_atoms = map_reduce.bind(null, (
-    a, b) => a.union(b), 
+const find_all_atoms = map_reduce.bind(null, 
+    (a, b) => a.union(b), 
     (e: Expression) => new Set((e as Atom).literal),
     new Set()
 )
@@ -280,17 +280,47 @@ function find_johnson_variable(expr: Expression) {
     return false
 }
 
-export function perform_johnson_simplification_step(expr: Expression): Expression {
-    if (expr.kind != 'bexpr') return expr
-    const bexpr = expr as BExpr
-
-    if (is_dnf(expr)) {
-        const johnson_variable = find_johnson_variable(expr)
-        console.log(johnson_variable)
-    }
+function dnf_to_nexpr(bexpr: BExpr): NExpr {
+    if (!is_dnf(bexpr)) throw new Error("Attempted to turn non DNF into nexpr, programmer error :(")
     
-    return make_bexpr({
-        operator: bexpr.operator,
-        operands: bexpr.operands.map(perform_johnson_simplification_step)
-   })
+    if (bexpr.operands.every(is_conjunction_clause)) {
+        return make_nexpr({operator: 'or', operands: bexpr.operands})
+    }
+
+    const r = bexpr.operands[0] as BExpr
+    const l = bexpr.operands[1] as BExpr
+
+    if (is_conjunction_clause(r)) {
+        let nexpr = dnf_to_nexpr(l)
+        nexpr.operands.push(r)
+        return nexpr
+    }
+
+    if (is_conjunction_clause(l)) {
+        let nexpr = dnf_to_nexpr(r)
+        nexpr.operands.push(l)
+        return nexpr
+    }
+
+    throw new Error("DNF has no clause in left or right branch, confused :(")
+}
+
+export function perform_johnson_simplification_step(expr: Expression): Expression {
+    if (expr.kind === 'qexpr') {
+        let qexpr = expr as QExpr
+        qexpr.operands[1] = perform_johnson_simplification_step(qexpr.operands[1])
+        qexpr.operands[2] = perform_johnson_simplification_step(qexpr.operands[2])
+    }
+
+    if (expr.kind === 'bexpr') {
+        const bexpr = expr as BExpr
+
+        if (is_dnf(expr)) {
+            const nexpr = dnf_to_nexpr(bexpr)
+            console.log(nexpr)
+            return nexpr
+        }
+    }
+    return expr
+    
 }

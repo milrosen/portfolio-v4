@@ -8,44 +8,35 @@
         "type": "tabs",
         "children": [
           {
-            "id": "c3d27a7ebb35013a",
-            "type": "leaf",
-            "state": {
-              "type": "markdown",
-              "state": {
-                "file": "Taking Metaphysics Seriously.md",
-                "mode": "source",
-                "source": false
-              },
-              "icon": "lucide-file",
-              "title": "Taking Metaphysics Seriously"
-            }
-          },
-          {
-            "id": "683c7cbc6c858190",
-            "type": "leaf",
-            "state": {
-              "type": "graph",
-              "state": {},
-              "icon": "lucide-git-fork",
-              "title": "Graph view"
-            }
-          },
-          {
             "id": "8029631f8e17dfb7",
             "type": "leaf",
             "state": {
               "type": "markdown",
               "state": {
-                "file": "Roman Numerals.md",
+                "file": "Fundamentality.md",
                 "mode": "source",
                 "source": false
               },
               "icon": "lucide-file",
-              "title": "Roman Numerals"
+              "title": "Fundamentality"
+            }
+          },
+          {
+            "id": "bcd7f1ceff4da8a5",
+            "type": "leaf",
+            "state": {
+              "type": "markdown",
+              "state": {
+                "file": "Pure Type Systems.md",
+                "mode": "source",
+                "source": false
+              },
+              "icon": "lucide-file",
+              "title": "Pure Type Systems"
             }
           }
-        ]
+        ],
+        "currentTab": 1
       }
     ],
     "direction": "vertical"
@@ -102,8 +93,7 @@
       }
     ],
     "direction": "horizontal",
-    "width": 300,
-    "collapsed": true
+    "width": 300
   },
   "right": {
     "id": "0e903120d1c38318",
@@ -184,17 +174,22 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "c3d27a7ebb35013a",
+  "active": "bcd7f1ceff4da8a5",
   "lastOpenFiles": [
-    "Toward a Comprehensive Theory of Anti-Intellectualism.md",
-    "Taking Metaphysics Seriously.md",
-    "config.tsx",
-    "Johnson.mdx",
-    "i wonder what happesn",
-    "Roman Numerals.md",
     "post1.mdx",
+    "Roman Numerals.md",
+    "Pure Type Systems.md",
+    "Fundamentality.md",
+    "Sartre.md",
+    "Taking Metaphysics Seriously.md",
+    "Toward a Comprehensive Theory of Anti-Intellectualism.md",
+    "Johnson Formulas.md",
+    "Johnson.mdx",
+    "Johnson.md",
+    "Chairs.md",
+    "config.tsx",
+    "i wonder what happesn",
     "Untitled.canvas",
-    "2024-11-06.md",
-    "Johnson.md"
+    "2024-11-06.md"
   ]
 }
