@@ -53,7 +53,7 @@ Further, this is also how "weak functions" work. Since $\lambda P$ can have depe
 In a simply typed system, types aren't part of the language, and are given in the metalanguage. (with a few constructors like Arrow or maybe List to enable compound types, but all the atomic types must be metalanguage)
 
 In non simple systems it makes sense to add introducing new types as part of the formal system itself. For this, we need to extend the $:$ judgement. It is now the "kinding" judgement, so the "kind" of a term is its type, but the *kind* of a type is $\star$. We also extend our $\vdash$ to say what kind of new types. So instead of being a separate rule for the typing judgement, or part of the metalanguage, I can write that $\Gamma, A : \star \vdash A \rightarrow A : \star$ (or, if a is a type, then so is a function from $A$ to $A$). 
-\usetheme frankfurt, \colortheme seahorse
+
 Next, we can reintroduce our dependencies from earlier, now as elements of the formal language itself:
 
 $$
