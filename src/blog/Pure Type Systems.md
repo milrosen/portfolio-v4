@@ -118,7 +118,7 @@ For some more definitions:
 Every legal term is either an object, type, constructor, or kind. All types are also constructors. All corners of the cube have Church-Rosner, (multistep preserves beta equality, and determinism) Preservation (stepping terms are the same type) Normalization (all terms have or are values) Deterministic typing (all possible types of a term are beta equivalent)
 
 # Examples
-## $\lambda \rightarrow$, 
+## $\lambda \rightarrow$
 $$
 \begin{align*}
 A : \star &\vdash (A \rightarrow A ) : \star\\
@@ -128,7 +128,7 @@ A : \star, b : A &\vdash ((\lambda a : A.a)\ b) : A\\
 A : \star, B : \star, c : A, b : B &\vdash ((\lambda a : A. b) c) : B
 \end{align*}
 $$
-## $\lambda \mathbf{2}$,
+## $\lambda \mathbf{2}$
 $$
 \begin{align*}
 \alpha : \star &\vdash (\lambda a : \alpha .a) : (\alpha \rightarrow \alpha) \\
@@ -192,7 +192,7 @@ $$
 A proof of the claim that $(\forall x \in A . Pa \rightarrow Q) \rightarrow (\forall a \in A. Pa) \rightarrow Q)$ 
 The last step is because $\Pi x : A . B \equiv A \rightarrow B$ when $x$ doesn't appear in $B$ .  
 
-## $\lambda \omega$. 
+## $\lambda \omega$
 First, let $\alpha \wedge \beta \equiv\Pi\gamma : \star . (\alpha \rightarrow \beta \rightarrow \gamma) \rightarrow \gamma$ 	
 $$
 \alpha : \star, \beta : \star \vdash \alpha \wedge \beta : \star
@@ -230,3 +230,8 @@ This is the constructor of a diagonalization of a predicate
 	\textbf{ALL}\ A\ P) =_\beta (\Pi a : A. Pa)$$The book calls this "universal quantification done uniformly"
  I do not know what that means.
 
+<style>
+	.katex-display	{
+		overflow: scroll
+	}
+</style>
