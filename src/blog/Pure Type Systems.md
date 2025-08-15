@@ -16,9 +16,6 @@ title: Pure Type Systems
 \end{tikzcd}
 </script>
 </div>
-
-
-
 In this diagram, eight systems are defined. The arrow represents $\subseteq$, so the weakest system is the simply typed lambda calculus, at the bottom left. Other named systems are $\lambda 2$, which is equivalent to system $\textbf{F}$, which is the polymorphic lambda calculus. $\lambda\omega$ is equivalent to $F\omega$, which was proposed by Girard, $\lambda P$ is equivalent to the "automath" language, and is sometimes called $LF$, which is the language that beluga uses for "weak functions" allowing a form of impredicativity without generating inconsistencies or even large cardinals.
 
 The underlines are pronounced "weak" (like the weak functions from LF). P2 is studied under the name P2. (Is this the "pure" type system?)
