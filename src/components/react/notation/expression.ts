@@ -74,27 +74,27 @@ export function make_qexpr(q: { operands: Expression[] }): QExpr {
     return {
         kind: 'qexpr',
         operands: [lu, ru, ld, rd],
-        vertical_view: () => {
-            return make_bexpr({
-                operator: 'or',
-                operands: [make_bexpr({
-                    operator: 'and',
-                    operands: [lu, ld]
-                }), make_bexpr({
-                    operator: 'and',
-                    operands: [ru, rd]
-                })]
-            })
-        },
-        horizontal_view: () => {
+        vertical_view() {
             return make_bexpr({
                 operator: 'and',
                 operands: [make_bexpr({
                     operator: 'or',
-                    operands: [lu, ru]
+                    operands: [this.operands[0], this.operands[2]]
                 }), make_bexpr({
                     operator: 'or',
-                    operands: [ld, rd]
+                    operands: [this.operands[1], this.operands[3]]
+                })]
+            })
+        },
+        horizontal_view() {
+            return make_bexpr({
+                operator: 'or',
+                operands: [make_bexpr({
+                    operator: 'and',
+                    operands: [this.operands[0], this.operands[1]]
+                }), make_bexpr({
+                    operator: 'and',
+                    operands: [this.operands[2], this.operands[2]]
                 })]
             })
 
@@ -195,9 +195,9 @@ export function print_expression(direction="vertical", expression: Expression): 
         }
     }
 
-    if (expression.kind === 'qexpr') {
+    if (expression.kind === 'qexpr') {  
         const qexpr = expression as QExpr
-        if (direction == 'vertical') {
+        if (direction === 'vertical') {
             return print_expression(direction, qexpr.vertical_view())
         }
         return print_expression(direction, qexpr.horizontal_view())
@@ -226,6 +226,10 @@ function is_operative_only(operator: Operator, expr: Expression): boolean {
 
     return is_operative_only(operator, bexpr.right) && 
            is_operative_only(operator, bexpr.left)
+}
+
+function contains_unit_clause(nexpr: NExpr) {
+    return nexpr.operands.some(e => (e as NExpr).operands.length <= 1)
 }
 
 function is_operative_normal_form(operatorA: Operator, operatorB: Operator, expr: Expression): boolean {
@@ -288,6 +292,12 @@ function find_johnson_variable(nexpr: NExpr) {
 }
 
 function make_johnson(johnson_variable: string, nexpr: NExpr) {
+    
+    // check if alternate johnson form: length two with unit clause, or single clause
+    if ((nexpr.operands.length == 2 && contains_unit_clause(nexpr)) || nexpr.operands.length == 1) {
+        return nexpr
+    }
+
     var pos = make_nexpr({
         operator: 'or',
         operands: []
@@ -318,6 +328,8 @@ function make_johnson(johnson_variable: string, nexpr: NExpr) {
             operands: nexpr.operands.slice().push(make_atom(johnson_variable.toLowerCase()))
         }))
     })
+
+
 
     return make_qexpr({
         operands: [
@@ -357,8 +369,12 @@ function dnf_to_nexpr(bexpr: BExpr): NExpr {
 export function perform_johnson_simplification_step(expr: Expression): Expression {
     if (expr.kind === 'qexpr') {
         let qexpr = expr as QExpr
-        qexpr.operands[1] = perform_johnson_simplification_step(qexpr.operands[1])
-        qexpr.operands[2] = perform_johnson_simplification_step(qexpr.operands[2])
+        const ru = perform_johnson_simplification_step(qexpr.operands[1])
+        const ld = perform_johnson_simplification_step(qexpr.operands[2])
+
+        return make_qexpr({
+            operands: [qexpr.operands[0], ru, ld, qexpr.operands[3]]
+        })
     }
 
     if (expr.kind === 'bexpr') {
@@ -366,7 +382,6 @@ export function perform_johnson_simplification_step(expr: Expression): Expressio
 
         if (is_dnf(expr)) {
             const nexpr = dnf_to_nexpr(bexpr)
-            console.log(nexpr)
             return nexpr
         }
     }

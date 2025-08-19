@@ -12,7 +12,7 @@ export default function johnson(props: { text: string }) {
     const [errorMessage, setErrorMessage] = useState("")
     const textAreaRef = useRef<HTMLTextAreaElement>(null)
     const [direction, setDirection] = useState('vertical')
-    const [formula, setFormula] = useState(parse_johnson(props.text.split("\n")))
+    const [formula, setFormula] = useState(parse_johnson(props.text.split("\n")))   
 
     useEffect(() => {
         try {
@@ -32,7 +32,7 @@ export default function johnson(props: { text: string }) {
     <div onClick={() => {
         setViewFormula(false)
         }}>
-        <DisplayJohnson formula={formula}/>
+        <DisplayJohnson key={""} formula={formula}/>
     </div>
     
     : <textarea 
@@ -69,7 +69,9 @@ export default function johnson(props: { text: string }) {
     </textarea>}
     {error ? 
         <Tooltip anchorSelect='#formula_input_id'>{errorMessage}</Tooltip> 
-    : <button onClick={() => setFormula(perform_johnson_simplification_step(formula))}>Perform Simplification Step</button>}
+    : <button onClick={() => {
+        setFormula(perform_johnson_simplification_step(formula))
+    }}>Perform Simplification Step</button>}
     
     <div>{print_expression(direction, formula)}</div>
     </>
@@ -88,11 +90,11 @@ const style_textarea = {
     height: '300px'
 }
 
-function DisplayJohnson({formula}: {formula: Expression}) {
+function DisplayJohnson({formula}: {formula: Expression}, key: string) {
     if (formula.kind === 'atom') {
         const atom = formula as Atom 
         return (
-            <div>{atom.literal}</div>
+            <div key={key+atom.literal}>{atom.literal}</div>
         )
     }
 
@@ -100,25 +102,25 @@ function DisplayJohnson({formula}: {formula: Expression}) {
         const qexpr = formula as QExpr
         const [ru, ul, ld, rd] = qexpr.operands
         return (
-            <div style={style_quad}>
-                <div style={grid_item}>
+            <div key={key} style={style_quad}>
+                <div key={key+"rugi"} style={grid_item}>
                     <div style={{padding: grid_variables.GAP}}>
-                        {DisplayJohnson({formula: ru})}
+                        {DisplayJohnson({formula: ru}, key+"ru")}
+                    </div>
+                </div>
+                <div key={key+"ulgi"} style={grid_item}>
+                    <div style={{padding: grid_variables.GAP}}>                        
+                        {DisplayJohnson({formula: ul}, key+"ul")}
+                    </div>
+                </div>
+                <div key={key+"ldgi"} style={grid_item}>
+                    <div style={{padding: grid_variables.GAP}}>                        
+                        {DisplayJohnson({formula: ld}, key+"ld")}
                     </div>
                 </div>
                 <div style={grid_item}>
-                    <div style={{padding: grid_variables.GAP}}>                        
-                        {DisplayJohnson({formula: ul})}
-                    </div>
-                </div>
-                <div style={grid_item}>
-                    <div style={{padding: grid_variables.GAP}}>                        
-                        {DisplayJohnson({formula: ld})}
-                    </div>
-                </div>
-                <div style={grid_item}>
-                    <div style={{padding: grid_variables.GAP}}>                        
-                        {DisplayJohnson({formula: rd})}
+                    <div key={key+"rdgi"}style={{padding: grid_variables.GAP}}>                        
+                        {DisplayJohnson({formula: rd}, key+"rd")}
                     </div>
                 </div>
             </div>
@@ -131,10 +133,10 @@ function DisplayJohnson({formula}: {formula: Expression}) {
         const line_style = vertical ? horizontal_line : vertical_line 
         const direction_style = vertical ? style_johnson_vertical : style_johnson_horizontal
         return (
-            <div style={direction_style}>
-                {DisplayJohnson({formula: bexpr.right})}
-                <div style={line_style}/>
-                {DisplayJohnson({formula: bexpr.left})}
+            <div key={key} style={direction_style}>
+                {DisplayJohnson({formula: bexpr.right}, key+"0")}
+                <div key={key+"l"} style={line_style}/>
+                {DisplayJohnson({formula: bexpr.left}, key+"1")}
             </div>
         )
     }
@@ -146,12 +148,12 @@ function DisplayJohnson({formula}: {formula: Expression}) {
         if (is_clause(formula) || is_conjunction_clause(formula)) line_style = invisible
         const direction_style = vertical ? style_johnson_vertical : style_johnson_horizontal
         return (
-            <div style={direction_style}>
+            <div key={key} style={direction_style}>
                 {nexpr.operands.map((op, i) => 
-                   (<>
-                    {i === 0 ? <></> : <div style={line_style}></div>}
-                    {DisplayJohnson({formula: op})}
-                    </>))}
+                <div key={key+i+"gi"}>
+                   {i === 0 ? <div key={key+"0l"}/> : <div key={key+i+"l"} style={line_style}/>}
+                   {DisplayJohnson({formula: op}, key=key+i)}
+                </div>)}
             </div>
         )
     }
