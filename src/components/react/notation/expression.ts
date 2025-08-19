@@ -1,3 +1,4 @@
+
 export interface Expression {
     readonly kind: ExpressionKinds
     has_similar_operands: boolean
@@ -263,21 +264,69 @@ function map_reduce<T>(g: Combine<T>, f: MapTo<T>, initial:T, expr: Expression):
     return initial
 }
 
-const find_all_atoms = map_reduce.bind(null, 
-    (a, b) => a.union(b), 
-    (e: Expression) => new Set((e as Atom).literal),
-    new Set()
-)
+function contains(expr: Expression, literal: string) {
+    return map_reduce((a,b) => a||b, e => (e as Atom).literal == literal, false, expr)
+}
 
-const common_atoms = map_reduce.bind(null, 
-    (a, b) => a.intersection(b), 
-    (e: Expression) => new Set((e as Atom).literal),
-    new Set()
-)
 
-function find_johnson_variable(expr: Expression) {
-    const all_atoms = find_all_atoms(expr)
-    return false
+
+function find_johnson_variable(nexpr: NExpr) {
+    var counter: {[index: string]: number} = {}
+    nexpr.operands.forEach(c => {
+        const clause = c as NExpr
+        clause.operands.forEach(a => {
+            const atom = a as Atom
+            const literal = atom.literal.toLowerCase()
+            if (!counter[literal]) {
+                counter[literal] = 0
+            }
+            counter[literal] += 1
+        })
+    })
+    return Object.keys(counter).reduce((a,b) => counter[a] > counter[b] ? a : b)
+   
+}
+
+function make_johnson(johnson_variable: string, nexpr: NExpr) {
+    var pos = make_nexpr({
+        operator: 'or',
+        operands: []
+    })
+
+    var neg = make_nexpr({
+        operator: 'or',
+        operands: []
+    })
+    nexpr.operands.forEach(c => {
+        const clause = c as NExpr
+        if (contains(clause, johnson_variable.toLowerCase())) {
+            clause.operands = clause.operands.filter(a => (a as Atom).literal != johnson_variable.toLowerCase())
+            neg.operands.push(clause)
+            return
+        }
+        if (contains(clause, johnson_variable.toUpperCase())) {
+            clause.operands = clause.operands.filter(a => (a as Atom).literal != johnson_variable.toUpperCase())
+            pos.operands.push(clause)
+            return
+        }
+        pos.operands.push(make_nexpr({
+            operator: 'and',
+            operands: nexpr.operands.slice().push(make_atom(johnson_variable.toUpperCase()))
+        }))
+        neg.operands.push(make_nexpr({
+            operator: 'and',
+            operands: nexpr.operands.slice().push(make_atom(johnson_variable.toLowerCase()))
+        }))
+    })
+
+    return make_qexpr({
+        operands: [
+            make_atom(johnson_variable.toUpperCase()),
+            pos,
+            neg,
+            make_atom(johnson_variable.toLowerCase())
+        ]
+    })
 }
 
 function dnf_to_nexpr(bexpr: BExpr): NExpr {
@@ -320,6 +369,12 @@ export function perform_johnson_simplification_step(expr: Expression): Expressio
             console.log(nexpr)
             return nexpr
         }
+    }
+
+    if (expr.kind === 'nexpr') {
+        const nexpr = expr as NExpr
+        const johnson_variable = find_johnson_variable(nexpr)        
+        return make_johnson(johnson_variable, nexpr)
     }
     return expr
     

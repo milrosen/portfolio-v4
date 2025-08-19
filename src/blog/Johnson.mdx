@@ -106,9 +106,18 @@ In the first step, we went line-by-line, finding the most common variable, eithe
 
 After reordering the variables, all that's left is some very easy grouping. The final formula now acts as a very efficient representation of all the implication relations. Each vertical line is a valid clause, and using the same principle from earlier, we can turn the clauses into implication relations, following whatever ordering makes the most sense. For the vertical slice on the far left, we would get $B + A + Cd$, and we could turn that into an implication relation by negating the first few terms, $ba \rightarrow Cd$. 
 
-In addition to getting these formulas working, I've added an automatic interpreter of the Johnson formulas (though it doesn't handle that special case yet)
-
+In addition to getting these formulas working, I've added an automatic interpreter of the Johnson formulas. For a given formula that is either fully a DNF or a Johnson formula containing DNFs, it will carry out the conversion to a formula fully in Johnson's form.
 {/* johnson formula */}
-<Johnson client:only="react" text={`C | B\n  | a
---+--
-Ab| c`}/>
+<Johnson client:only="react" text={`ABC
+---
+abD
+---
+acd
+---
+AC `}/>
+# Contemporary Evaluation of Johnson's Method
+
+Johnson set out to solve the inverse problem: given a set of "observations" (A formula in DNF, thought of as observations since each clause represents a possible state of affairs) infer the "rules" (a set of implication statements, but thought of by Johnson as a set of disjunctive clauses) that were used to create them. At the time, there was no developed method to evaluate the relative complexity of algorithms, or, in this case, the complexity of the programs themselves. However, with modern tools we can shed a much clearer light on Johnson's methods. 
+
+First, I present a relationship between Johnson formulas and decision trees. Then, I show that we can use this reduction to answer questions like "given an implication relationship contained within the DNF, could Johnson's method always reveal it?" (No), "will Johnson's method always find the smallest Johnson formula?" (No) and "how far from the smallest set of implication relations is the smallest possible Johnson formula?" (Exponentially).
+
