@@ -94,7 +94,7 @@ export function make_qexpr(q: { operands: Expression[] }): QExpr {
                     operands: [this.operands[0], this.operands[1]]
                 }), make_bexpr({
                     operator: 'and',
-                    operands: [this.operands[2], this.operands[2]]
+                    operands: [this.operands[2], this.operands[3]]
                 })]
             })
 
