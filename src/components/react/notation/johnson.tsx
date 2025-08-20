@@ -69,9 +69,15 @@ export default function johnson(props: { text: string }) {
     </textarea>}
     {error ? 
         <Tooltip anchorSelect='#formula_input_id'>{errorMessage}</Tooltip> 
-    : <button onClick={() => {
+    : <>
+    <button onClick={() => {
         setFormula(perform_johnson_simplification_step(formula))
-    }}>Perform Simplification Step</button>}
+    }}>Perform Simplification Step</button>
+    <button onClick={() => {
+        setDirection(direction => direction === 'vertical' ? 'horizontal' : 'vertical')
+    }}>{direction}
+    </button>
+    </>}
     
     <div>{print_expression(direction, formula)}</div>
     </>

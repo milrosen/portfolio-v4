@@ -382,7 +382,7 @@ export function perform_johnson_simplification_step(expr: Expression): Expressio
 
         if (is_dnf(expr)) {
             const nexpr = dnf_to_nexpr(bexpr)
-            return nexpr
+            return perform_johnson_simplification_step(nexpr)
         }
     }
 
